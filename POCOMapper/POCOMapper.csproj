@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+      <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+      <Description>POCO stands for "Plain Old C# Object" or "Plain Old CLR Object", depending on who you ask. This library is a custom mapper for POCOs (map values of identical properties from one POCO to another POCO).</Description>
+      <Copyright>Nor Gelera 2019</Copyright>
+      <PackageProjectUrl>https://github.com/norgelera/poco.mapper</PackageProjectUrl>
+      <RepositoryUrl>https://github.com/norgelera/poco.mapper</RepositoryUrl>
+      <PackageTags>poco mapper entity class equals</PackageTags>
+      <RepositoryType>Git</RepositoryType>
+      <Authors>Nor Gelera</Authors>
+      <Product>POCO.Mapper</Product>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>E:\DEV\POCOMapper\POCOMapper\POCOMapper.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>E:\DEV\POCOMapper\POCOMapper\POCOMapper.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+</Project>

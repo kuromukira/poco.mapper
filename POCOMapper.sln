@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POCOMapper", "POCOMapper\POCOMapper.csproj", "{D7BE9198-5CB6-4521-AC86-D49B2D0716C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTesting", "ConsoleTesting\ConsoleTesting.csproj", "{A740A457-39FF-40AF-95AE-2F18F3398154}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D7BE9198-5CB6-4521-AC86-D49B2D0716C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7BE9198-5CB6-4521-AC86-D49B2D0716C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7BE9198-5CB6-4521-AC86-D49B2D0716C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7BE9198-5CB6-4521-AC86-D49B2D0716C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A740A457-39FF-40AF-95AE-2F18F3398154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A740A457-39FF-40AF-95AE-2F18F3398154}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A740A457-39FF-40AF-95AE-2F18F3398154}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A740A457-39FF-40AF-95AE-2F18F3398154}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7CB86C8A-97AD-4C1D-A1AE-DCE18E052C5C}
+	EndGlobalSection
+EndGlobal
