@@ -3,7 +3,7 @@ POCO stands for "Plain Old C# Object" or "Plain Old CLR Object", depending on wh
 
 # How-To
 
-## [NuGet](https://www.nuget.org/packages/POCO.Mapper/)
+## [NuGet](https://www.nuget.org/packages/POCOMapper/)
 
 Add as reference in your class
 ```c#
