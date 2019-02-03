@@ -17,7 +17,7 @@
       <Version>1.0.1</Version>
       <PackageReleaseNotes>- Fixed  a mapping issue with IList&lt;&gt; properties of a POCO.
 - Added IMapperException
-- Moddfied the implementation of MappedTo.Type for IList&lt;&gt; properties of a POCO</PackageReleaseNotes>
+- Modified the implementation of MappedTo.Type for IList&lt;&gt; properties of a POCO</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
