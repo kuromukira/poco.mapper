@@ -50,5 +50,7 @@ namespace ConsoleTesting
     {
         public long Id { get; set; }
         public string EmployeeName { get; set; }
+        public string FirstName { get; set; } // Will be ignored
+        public string Lastname { get; set; } // Will be ignored
     }
 }

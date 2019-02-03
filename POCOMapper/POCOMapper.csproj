@@ -14,10 +14,8 @@
       <RepositoryType>Git</RepositoryType>
       <Authors>Nor Gelera</Authors>
       <Product>POCO.Mapper</Product>
-      <Version>1.0.1</Version>
-      <PackageReleaseNotes>- Fixed  a mapping issue with IList&lt;&gt; properties of a POCO.
-- Added IMapperException
-- Modified the implementation of MappedTo.Type for IList&lt;&gt; properties of a POCO</PackageReleaseNotes>
+      <Version>1.1.0</Version>
+      <PackageReleaseNotes>- By default, POCOMapper will now ignore fields with no MappedTo attribute.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

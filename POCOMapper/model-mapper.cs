@@ -63,12 +63,12 @@ namespace POCO.Mapper
             {
                 foreach (PropertyInfo _outputProp in _output.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
-                    string _propertyName = _convertProp.Name;
                     // * Get custom attribute name
                     var _mappedTo = _convertProp.GetCustomAttributes(typeof(MappedTo), true).FirstOrDefault();
+                    string _mappedToName = string.Empty;
                     if (_mappedTo != null)
-                        _propertyName = ((MappedTo)_mappedTo).Name;
-                    if (_outputProp.Name.Equals(_propertyName))
+                        _mappedToName = ((MappedTo)_mappedTo).Name;
+                    if (!string.IsNullOrEmpty(_mappedToName) && _outputProp.Name.Equals(_mappedToName))
                     {
                         // * Check if Enum
                         if (_outputProp.GetType().IsEnum)
