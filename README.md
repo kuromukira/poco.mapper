@@ -3,7 +3,7 @@ POCO stands for "Plain Old C# Object" or "Plain Old CLR Object", depending on wh
 
 # How-To
 
-## [NuGet](https://www.nuget.org/packages/POCO.Mapper/)
+## [NuGet](https://www.nuget.org/packages/POCOMapper/)
 
 Add as reference in your class
 ```c#
@@ -18,8 +18,8 @@ public class Employee
 {
     [MappedTo("Id")]
     public long EmployeeId { get; set; }
-    public string FirstName { get; set; }
-    public string Lastname { get; set; }
+    public string FirstName { get; set; } // Will not be mapped
+    public string Lastname { get; set; } // Will not be mapped
     [MappedTo("EmployeeName")]
     public string FullName
     {
@@ -34,6 +34,8 @@ public class EmployeeViewModel
 {
     public long Id { get; set; }
     public string EmployeeName { get; set; }
+    public string FirstName { get; set; }
+    public string Lastname { get; set; }
 }
 ```
 The ```MappedTo("")``` attribute is required to map the property to a target POCO.
@@ -57,9 +59,9 @@ void Map()
     EmployeeViewModel _employeeViewModel = _mapper.from(_employee);
 }
 ```
-The result would be an instance of ```EmployeeViewModel``` with values for ```Id``` and ```EmployeeName``` from ```Employee``` entity.
+The result would be an instance of ```EmployeeViewModel``` with values for ```Id``` and ```EmployeeName``` from ```Employee``` entity. ```FirstName``` and ```LastName``` properties of ```Employee``` entity will be ignored by **POCOMapper** and will not be mapped to ```EmployeeViewModel```.
 
-***Note***: *As of the current version, ```POCO.Mapper``` supports mapping of values for ```IList``` properties only.*
+***Note***: *As of the current version, ```POCO.Mapper``` also supports mapping of values for ```IList``` properties.*
 
 # Contributors
 - [kuromukira](https://www.twitter.com/norgelera)
