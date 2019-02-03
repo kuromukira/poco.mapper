@@ -39,6 +39,18 @@
         <member name="P:POCO.Mapper.MappedTo.Type">
             <summary></summary>
         </member>
+        <member name="T:POCO.Mapper.IMapperException">
+            <summary></summary>
+        </member>
+        <member name="M:POCO.Mapper.IMapperException.#ctor">
+            <summary></summary>
+        </member>
+        <member name="M:POCO.Mapper.IMapperException.#ctor(System.String)">
+            <summary></summary>
+        </member>
+        <member name="M:POCO.Mapper.IMapperException.#ctor(System.String,System.Exception)">
+            <summary></summary>
+        </member>
         <member name="T:POCO.Mapper.ModelMapper`2">
             <summary>Map values from S to T and/or vice versa</summary>
             <typeparam name="T">Target Type</typeparam>

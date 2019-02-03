@@ -26,7 +26,7 @@ namespace POCO.Mapper
     public class MappedTo : Attribute
     {
         private string lName { get; set; } = string.Empty;
-        private Type lType { get; set; } = typeof(string);
+        private Type lType { get; set; } = null;
         /// <summary>Map to field</summary>
         /// <param name="name">Field Name</param>
         public MappedTo(string name) { lName = name; }
@@ -38,6 +38,17 @@ namespace POCO.Mapper
         public string Name { get { return lName; } }
         /// <summary></summary>
         public Type Type { get { return lType; } }
+    }
+
+    /// <summary></summary>
+    public class IMapperException : Exception
+    {
+        /// <summary></summary>
+        public IMapperException() { }
+        /// <summary></summary>
+        public IMapperException(string message) : base(message) { }
+        /// <summary></summary>
+        public IMapperException(string message, Exception inner) : base(message, inner) { }
     }
 
     ///<summary>Map values from S to T and/or vice versa</summary>
@@ -67,12 +78,16 @@ namespace POCO.Mapper
                         {
                             var _collection = (IEnumerable)_convertProp.GetValue(toConvert, null);
                             var _listType = typeof(List<>);
-                            var _constructedListType = _listType.MakeGenericType(((MappedTo)_mappedTo).Type);
+                            var _constructedListType = _listType.MakeGenericType(((MappedTo)_mappedTo).Type.GetGenericArguments());
+                            if (_constructedListType == null)
+                                throw new IMapperException("MappedTo.Type is required for collection property mapping. e.g MappedTo(\"Field\", typeof(List<MyClass>))");
+                            else if (((MappedTo)_mappedTo).Type.IsGenericType && ((MappedTo)_mappedTo).Type.GetGenericTypeDefinition() == typeof(IList<>))
+                                throw new IMapperException("IList<> is not supported for MappedTo.Type. Change it to List<> to avoid further errors.");
                             var _finalList = (IList)Activator.CreateInstance(_constructedListType);
                             foreach (object _obj in _collection)
                             {
                                 // * Call method again to map list objects
-                                object _result = map(_obj, ((MappedTo)_mappedTo).Type);
+                                object _result = map(_obj, ((MappedTo)_mappedTo).Type.GetGenericArguments()[0]);
                                 _finalList.Add(_result);
                             }
                             _outputProp.SetValue(_output, _finalList);
