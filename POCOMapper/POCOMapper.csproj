@@ -14,8 +14,8 @@
       <RepositoryType>Git</RepositoryType>
       <Authors>Nor Gelera</Authors>
       <Product>POCO.Mapper</Product>
-      <Version>1.1.0</Version>
-      <PackageReleaseNotes>- By default, POCOMapper will now ignore fields with no MappedTo attribute.</PackageReleaseNotes>
+      <Version>1.1.1</Version>
+      <PackageReleaseNotes>- POCO.Mapper will now map values for properties that are of user-defined type (user-defined class, non-primitive type, not abstract).</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
