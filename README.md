@@ -25,6 +25,17 @@ public class Employee
     {
         get { return Lastname + ", " + FirstName;  }
     }
+    [MappedTo("WorkView")]
+    public Work Work { get; set; } = new Work();
+}
+
+public class Work
+{
+    public Guid WorkId { get; set; } // Will not be mapped
+    [MappedTo("JobTitle")]
+    public string Title { get; set; }
+    [MappedTo("WorkAddress")]
+    public string Address { get; set; }
 }
 
 /// <summary>
@@ -34,8 +45,15 @@ public class EmployeeViewModel
 {
     public long Id { get; set; }
     public string EmployeeName { get; set; }
-    public string FirstName { get; set; }
-    public string Lastname { get; set; }
+    public string FirstName { get; set; } // Will be ignored
+    public string Lastname { get; set; } // Will be ignored
+    public WorkViewModel WorkView { get; set; } = new WorkViewModel();
+}
+
+public class WorkViewModel
+{
+    public string JobTitle { get; set; }
+    public string WorkAddress { get; set; }
 }
 ```
 The ```MappedTo("")``` attribute is required to map the property to a target POCO.
@@ -49,7 +67,13 @@ void Map()
     {
         EmployeeId = 1,
         FirstName = "Nor",
-        Lastname = "Gelera"
+        Lastname = "Gelera",
+        Work = new Work
+        {
+            WorkId = Guid.NewGuid(),
+            Title = ".NET Developer",
+            Address = "Cebu"
+        }
     };
 
     // Initialize Mapper
@@ -59,7 +83,7 @@ void Map()
     EmployeeViewModel _employeeViewModel = _mapper.from(_employee);
 }
 ```
-The result would be an instance of ```EmployeeViewModel``` with values for ```Id``` and ```EmployeeName``` from ```Employee``` entity. ```FirstName``` and ```LastName``` properties of ```Employee``` entity will be ignored by **POCOMapper** and will not be mapped to ```EmployeeViewModel```.
+The result would be an instance of ```EmployeeViewModel``` with values for ```Id``` and ```EmployeeName``` from ```Employee``` entity. ```FirstName``` and ```LastName``` properties of ```Employee``` entity will be ignored by **POCOMapper** and will not be mapped to ```EmployeeViewModel```. Values for ```Work``` property of ```Employee``` will also be mapped to ```WorkViewModel```.
 
 ***Note***: *As of the current version, ```POCO.Mapper``` also supports mapping of values for ```IList``` properties.*
 
