@@ -24,6 +24,12 @@
         <member name="T:POCO.Mapper.MappedTo">
             <summary>Mapper Attribute Target</summary>
         </member>
+        <member name="P:POCO.Mapper.MappedTo.Name">
+            <summary></summary>
+        </member>
+        <member name="P:POCO.Mapper.MappedTo.Type">
+            <summary></summary>
+        </member>
         <member name="M:POCO.Mapper.MappedTo.#ctor(System.String)">
             <summary>Map to field</summary>
             <param name="name">Field Name</param>
@@ -32,12 +38,6 @@
             <summary>Map to a collection field</summary>
             <param name="name">Field Name</param>
             <param name="individualType">Individual Type for collection object</param>
-        </member>
-        <member name="P:POCO.Mapper.MappedTo.Name">
-            <summary></summary>
-        </member>
-        <member name="P:POCO.Mapper.MappedTo.Type">
-            <summary></summary>
         </member>
         <member name="T:POCO.Mapper.IMapperException">
             <summary></summary>

@@ -25,19 +25,17 @@ namespace POCO.Mapper
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class MappedTo : Attribute
     {
-        private string lName { get; set; } = string.Empty;
-        private Type lType { get; set; } = null;
+        /// <summary></summary>
+        public string Name { get; }
+        /// <summary></summary>
+        public Type Type { get; }
         /// <summary>Map to field</summary>
         /// <param name="name">Field Name</param>
-        public MappedTo(string name) { lName = name; }
+        public MappedTo(string name) => Name = name;
         /// <summary>Map to a collection field</summary>
         /// <param name="name">Field Name</param>
         /// <param name="individualType">Individual Type for collection object</param>
-        public MappedTo(string name, Type individualType) { lName = name; lType = individualType; }
-        /// <summary></summary>
-        public string Name { get { return lName; } }
-        /// <summary></summary>
-        public Type Type { get { return lType; } }
+        public MappedTo(string name, Type individualType) { Name = name; Type = individualType; }
     }
 
     /// <summary></summary>
@@ -71,7 +69,7 @@ namespace POCO.Mapper
                     if (!string.IsNullOrEmpty(_mappedToName) && _outputProp.Name.Equals(_mappedToName))
                     {
                         // * Check if Enum
-                        if (_outputProp.GetType().IsEnum)
+                        if (_outputProp.PropertyType.IsEnum)
                             _outputProp.SetValue(_output, Enum.ToObject(_outputProp.GetType(), _convertProp.GetValue(toConvert)));
                         // * Check if IEnumerable (eg IList, List)
                         else if (_outputProp.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(_outputProp.PropertyType))
@@ -92,6 +90,10 @@ namespace POCO.Mapper
                             }
                             _outputProp.SetValue(_output, _finalList);
                         }
+                        // * Check if a custom type
+                        else if (!_outputProp.PropertyType.IsPrimitive && _outputProp.PropertyType.IsClass
+                            && !_outputProp.PropertyType.IsAbstract && _outputProp.PropertyType != typeof(string))
+                            _outputProp.SetValue(_output, map(_convertProp.GetValue(toConvert), _outputProp.PropertyType));
                         // * Default
                         else _outputProp.SetValue(_output, _convertProp.GetValue(toConvert));
                         break;

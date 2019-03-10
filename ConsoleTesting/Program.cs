@@ -1,22 +1,24 @@
 ﻿using POCO.Mapper;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleTesting
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             // Example Data Only
             Employee _employee = new Employee
             {
-                EmployeeId = 1,
+                EmployeeId = Guid.NewGuid(),
                 FirstName = "Nor",
-                Lastname = "Gelera"
+                Lastname = "Gelera",
+                Work = new Work
+                {
+                    WorkId = Guid.NewGuid(),
+                    Title = ".NET Developer",
+                    Address = "Cebu"
+                }
             };
 
             // Initialize Mapper
@@ -33,14 +35,22 @@ namespace ConsoleTesting
     public class Employee
     {
         [MappedTo("Id")]
-        public long EmployeeId { get; set; }
+        public Guid EmployeeId { get; set; }
         public string FirstName { get; set; }
         public string Lastname { get; set; }
         [MappedTo("EmployeeName")]
-        public string FullName
-        {
-            get { return Lastname + ", " + FirstName;  }
-        }
+        public string FullName { get { return Lastname + ", " + FirstName; } }
+        [MappedTo("Work")]
+        public Work Work { get; set; } = new Work();
+    }
+
+    public class Work
+    {
+        public Guid WorkId { get; set; }
+        [MappedTo("JobTitle")]
+        public string Title { get; set; }
+        [MappedTo("WorkAddress")]
+        public string Address { get; set; }
     }
 
     /// <summary>
@@ -48,9 +58,16 @@ namespace ConsoleTesting
     /// </summary>
     public class EmployeeViewModel
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
         public string EmployeeName { get; set; }
         public string FirstName { get; set; } // Will be ignored
         public string Lastname { get; set; } // Will be ignored
+        public WorkViewModel Work { get; set; } = new WorkViewModel();
+    }
+
+    public class WorkViewModel
+    {
+        public string JobTitle { get; set; }
+        public string WorkAddress { get; set; }
     }
 }
