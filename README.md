@@ -17,7 +17,7 @@ Let's say you have a different POCO for database models and for view-models.
 public class Employee
 {
     [MappedTo("Id")]
-    public long EmployeeId { get; set; }
+    public Guid EmployeeId { get; set; }
     public string FirstName { get; set; } // Will not be mapped
     public string Lastname { get; set; } // Will not be mapped
     [MappedTo("EmployeeName")]
@@ -43,7 +43,7 @@ public class Work
 /// </summary>
 public class EmployeeViewModel
 {
-    public long Id { get; set; }
+    public Guid Id { get; set; }
     public string EmployeeName { get; set; }
     public string FirstName { get; set; } // Will be ignored
     public string Lastname { get; set; } // Will be ignored
@@ -65,7 +65,7 @@ void Map()
     // Example Data Only
     Employee _employee = new Employee
     {
-        EmployeeId = 1,
+        EmployeeId = Guid.NewGuid(),
         FirstName = "Nor",
         Lastname = "Gelera",
         Work = new Work
