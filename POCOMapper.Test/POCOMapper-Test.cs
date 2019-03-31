@@ -21,7 +21,32 @@ namespace POCOMapper.Test
                 {
                     WorkId = Guid.NewGuid(),
                     Title = ".NET Developer",
+                    Company = "Arcanys",
                     Address = "Cebu"
+                },
+                History = new List<Work>
+                {
+                    new Work
+                    {
+                        WorkId = Guid.NewGuid(),
+                        Title = "Software Development and Production Manager",
+                        Company = "Jinisys Software Inc",
+                        Address = "Cebu"
+                    },
+                    new Work
+                    {
+                        WorkId = Guid.NewGuid(),
+                        Title = "Senior Software Engineer",
+                        Company = "Jinisys Software Inc",
+                        Address = "Cebu"
+                    },
+                    new Work
+                    {
+                        WorkId = Guid.NewGuid(),
+                        Title = "Junior Software Engineer",
+                        Company = "root+ Technology Service",
+                        Address = "Cebu"
+                    }
                 }
             };
         }
@@ -40,6 +65,7 @@ namespace POCOMapper.Test
                     {
                         WorkId = Guid.NewGuid(),
                         Title = ".NET Developer",
+                        Company = "Arcanys",
                         Address = "Cebu"
                     }
                 },
@@ -52,6 +78,7 @@ namespace POCOMapper.Test
                     {
                         WorkId = Guid.NewGuid(),
                         Title = "Angular Developer",
+                        Company = "Google Inc",
                         Address = "Cebu"
                     }
                 },
@@ -64,6 +91,7 @@ namespace POCOMapper.Test
                     {
                         WorkId = Guid.NewGuid(),
                         Title = "Java Developer",
+                        Company = "Oracle",
                         Address = "Cebu"
                     }
                 }
@@ -88,7 +116,7 @@ namespace POCOMapper.Test
             IList<Employee> _employees = CreateDummyEmployees();
             IList<EmployeeViewModel> _employeesVM = lMapper.from(_employees);
 
-            foreach(EmployeeViewModel _employeeVM in _employeesVM)
+            foreach (EmployeeViewModel _employeeVM in _employeesVM)
                 AssertResults(_employees[_employeesVM.IndexOf(_employeeVM)], _employeeVM);
         }
 
@@ -97,6 +125,7 @@ namespace POCOMapper.Test
             Assert.Equal(employee.EmployeeId, employeeVM.Id);
             Assert.Equal(employee.FullName, employeeVM.EmployeeName);
             Assert.Equal(employee.Work.Title, employeeVM.Work.JobTitle);
+            Assert.Equal(employee.Work.Company, employeeVM.Work.CompanyName);
             Assert.Equal(employee.Work.Address, employeeVM.Work.WorkAddress);
         }
     }
@@ -114,6 +143,8 @@ namespace POCOMapper.Test
         public string FullName { get { return Lastname + ", " + FirstName; } }
         [MappedTo("Work")]
         public Work Work { get; set; } = new Work();
+        [MappedTo("WorkHistory")]
+        public List<Work> History { get; set; }
     }
 
     public class Work
@@ -121,6 +152,8 @@ namespace POCOMapper.Test
         public Guid WorkId { get; set; }
         [MappedTo("JobTitle")]
         public string Title { get; set; }
+        [MappedTo("CompanyName")]
+        public string Company { get; set; }
         [MappedTo("WorkAddress")]
         public string Address { get; set; }
     }
@@ -135,11 +168,13 @@ namespace POCOMapper.Test
         public string FirstName { get; set; } // Will be ignored
         public string Lastname { get; set; } // Will be ignored
         public WorkViewModel Work { get; set; } = new WorkViewModel();
+        public WorkViewModel[] WorkHistory { get; set; }
     }
 
     public class WorkViewModel
     {
         public string JobTitle { get; set; }
+        public string CompanyName { get; set; }
         public string WorkAddress { get; set; }
     }
 }

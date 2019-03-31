@@ -27,15 +27,9 @@ namespace POCO.Mapper
     {
         /// <summary></summary>
         public string Name { get; }
-        /// <summary></summary>
-        public Type Type { get; }
         /// <summary>Map to field</summary>
         /// <param name="name">Field Name</param>
         public MappedTo(string name) => Name = name;
-        /// <summary>Map to a collection field</summary>
-        /// <param name="name">Field Name</param>
-        /// <param name="individualType">Individual Type for collection object</param>
-        public MappedTo(string name, Type individualType) { Name = name; Type = individualType; }
     }
 
     /// <summary></summary>
@@ -68,32 +62,40 @@ namespace POCO.Mapper
                         _mappedToName = ((MappedTo)_mappedTo).Name;
                     if (!string.IsNullOrEmpty(_mappedToName) && _outputProp.Name.Equals(_mappedToName))
                     {
+                        // * Validation for type mismatch
+                        if (!_outputProp.PropertyType.IsAssignableFrom(_convertProp.PropertyType) && !isCustomeType(_outputProp))
+                            throw new IMapperException(string.Format("The source type ({0}) could not be converted to the target type ({1}).", _convertProp.PropertyType.Name, _outputProp.PropertyType.Name));
+
                         // * Check if Enum
-                        if (_outputProp.PropertyType.IsEnum)
+                        else if (_outputProp.PropertyType.IsEnum)
                             _outputProp.SetValue(_output, Enum.ToObject(_outputProp.GetType(), _convertProp.GetValue(toConvert)));
+
                         // * Check if IEnumerable (eg IList, List)
                         else if (_outputProp.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(_outputProp.PropertyType))
                         {
                             var _collection = (IEnumerable)_convertProp.GetValue(toConvert, null);
                             var _listType = typeof(List<>);
-                            var _constructedListType = _listType.MakeGenericType(((MappedTo)_mappedTo).Type.GetGenericArguments());
-                            if (_constructedListType == null)
-                                throw new IMapperException("MappedTo.Type is required for collection property mapping. e.g MappedTo(\"Field\", typeof(List<MyClass>))");
-                            else if (((MappedTo)_mappedTo).Type.IsGenericType && ((MappedTo)_mappedTo).Type.GetGenericTypeDefinition() == typeof(IList<>))
-                                throw new IMapperException("IList<> is not supported for MappedTo.Type. Change it to List<> to avoid further errors.");
+
+                            // * Define and check the target output list
+                            var _constructedListType = _listType.MakeGenericType(_outputProp.PropertyType.GetGenericArguments());
+                            if (_constructedListType is null)
+                                throw new IMapperException("POCO.Mapper encountered an error with " + _outputProp.PropertyType.Name);
                             var _finalList = (IList)Activator.CreateInstance(_constructedListType);
+
+                            // * Loop through the objects to be mapped
                             foreach (object _obj in _collection)
                             {
                                 // * Call method again to map list objects
-                                object _result = map(_obj, ((MappedTo)_mappedTo).Type.GetGenericArguments()[0]);
+                                object _result = map(_obj, _outputProp.PropertyType.GetGenericArguments()[0]);
                                 _finalList.Add(_result);
                             }
                             _outputProp.SetValue(_output, _finalList);
                         }
+
                         // * Check if a custom type
-                        else if (!_outputProp.PropertyType.IsPrimitive && _outputProp.PropertyType.IsClass
-                            && !_outputProp.PropertyType.IsAbstract && _outputProp.PropertyType != typeof(string))
+                        else if (isCustomeType(_outputProp))
                             _outputProp.SetValue(_output, map(_convertProp.GetValue(toConvert), _outputProp.PropertyType));
+
                         // * Default
                         else _outputProp.SetValue(_output, _convertProp.GetValue(toConvert));
                         break;
@@ -101,6 +103,11 @@ namespace POCO.Mapper
                 }
             }
             return _output;
+
+            bool isCustomeType(PropertyInfo outputProp)
+            {
+                return (!outputProp.PropertyType.IsPrimitive && outputProp.PropertyType.IsClass && !outputProp.PropertyType.IsAbstract && outputProp.PropertyType != typeof(string));
+            }
         }
 
         T IMapper<T, S>.from(S source)
