@@ -358,3 +358,5 @@ ASALocalRun/
 netcore/obj/
 
 *.cache
+
+*.vscode
