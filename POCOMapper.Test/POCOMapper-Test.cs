@@ -9,6 +9,34 @@ namespace POCOMapper.Test
     public class POCOMapperTest
     {
         #region SAMPLE DATA
+        private IList<Work> WorkHistory()
+        {
+            return new List<Work>
+            {
+                new Work
+                {
+                    WorkId = Guid.NewGuid(),
+                    Title = "Software Development and Production Manager",
+                    Company = "Jinisys Software Inc",
+                    Address = "Cebu"
+                },
+                new Work
+                {
+                    WorkId = Guid.NewGuid(),
+                    Title = "Senior Software Engineer",
+                    Company = "Jinisys Software Inc",
+                    Address = "Cebu"
+                },
+                new Work
+                {
+                    WorkId = Guid.NewGuid(),
+                    Title = "Junior Software Engineer",
+                    Company = "root+ Technology Service",
+                    Address = "Cebu"
+                }
+            };
+        }
+
         private Employee CreateDummyEmployee()
         {
             // Example Data Only
@@ -24,30 +52,8 @@ namespace POCOMapper.Test
                     Company = "Arcanys",
                     Address = "Cebu"
                 },
-                History = new List<Work>
-                {
-                    new Work
-                    {
-                        WorkId = Guid.NewGuid(),
-                        Title = "Software Development and Production Manager",
-                        Company = "Jinisys Software Inc",
-                        Address = "Cebu"
-                    },
-                    new Work
-                    {
-                        WorkId = Guid.NewGuid(),
-                        Title = "Senior Software Engineer",
-                        Company = "Jinisys Software Inc",
-                        Address = "Cebu"
-                    },
-                    new Work
-                    {
-                        WorkId = Guid.NewGuid(),
-                        Title = "Junior Software Engineer",
-                        Company = "root+ Technology Service",
-                        Address = "Cebu"
-                    }
-                }
+                HistoryArray = WorkHistory().ToArray(),
+                HistoryList = WorkHistory()
             };
         }
 
@@ -67,7 +73,9 @@ namespace POCOMapper.Test
                         Title = ".NET Developer",
                         Company = "Arcanys",
                         Address = "Cebu"
-                    }
+                    },
+                    HistoryArray=WorkHistory().ToArray(),
+                    HistoryList=WorkHistory()
                 },
                 new Employee
                 {
@@ -80,7 +88,9 @@ namespace POCOMapper.Test
                         Title = "Angular Developer",
                         Company = "Google Inc",
                         Address = "Cebu"
-                    }
+                    },
+                    HistoryArray=WorkHistory().ToArray(),
+                    HistoryList=WorkHistory()
                 },
                 new Employee
                 {
@@ -93,7 +103,9 @@ namespace POCOMapper.Test
                         Title = "Java Developer",
                         Company = "Oracle",
                         Address = "Cebu"
-                    }
+                    },
+                    HistoryArray=WorkHistory().ToArray(),
+                    HistoryList=WorkHistory()
                 }
             };
         }
@@ -127,6 +139,21 @@ namespace POCOMapper.Test
             Assert.Equal(employee.Work.Title, employeeVM.Work.JobTitle);
             Assert.Equal(employee.Work.Company, employeeVM.Work.CompanyName);
             Assert.Equal(employee.Work.Address, employeeVM.Work.WorkAddress);
+
+            // Check Array
+            for (int i = 0; i < employee.HistoryArray.Length; i++)
+                AssertResults(employee.HistoryArray[i], employeeVM.WorkHistoryArray[i]);
+
+            // Check List
+            for (int i = 0; i < employee.HistoryList.Count; i++)
+                AssertResults(employee.HistoryList[i], employeeVM.WorkHistoryList[i]);
+        }
+
+        private void AssertResults(Work work, WorkViewModel workVM)
+        {
+            Assert.Equal(work.Address, workVM.WorkAddress);
+            Assert.Equal(work.Company, workVM.CompanyName);
+            Assert.Equal(work.Title, workVM.JobTitle);
         }
     }
 
@@ -143,8 +170,10 @@ namespace POCOMapper.Test
         public string FullName { get { return Lastname + ", " + FirstName; } }
         [MappedTo("Work")]
         public Work Work { get; set; } = new Work();
-        [MappedTo("WorkHistory")]
-        public List<Work> History { get; set; }
+        [MappedTo("WorkHistoryArray")]
+        public Work[] HistoryArray { get; set; }
+        [MappedTo("WorkHistoryList")]
+        public IList<Work> HistoryList { get; set; }
     }
 
     public class Work
@@ -168,7 +197,8 @@ namespace POCOMapper.Test
         public string FirstName { get; set; } // Will be ignored
         public string Lastname { get; set; } // Will be ignored
         public WorkViewModel Work { get; set; } = new WorkViewModel();
-        public WorkViewModel[] WorkHistory { get; set; }
+        public WorkViewModel[] WorkHistoryArray { get; set; }
+        public IList<WorkViewModel> WorkHistoryList { get; set; }
     }
 
     public class WorkViewModel

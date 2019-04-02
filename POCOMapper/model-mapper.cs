@@ -43,6 +43,22 @@ namespace POCO.Mapper
         public IMapperException(string message, Exception inner) : base(message, inner) { }
     }
 
+    ///<summary>Static helper class to convert list to arrays</summary>
+    internal static class ListExtensions
+    {
+        public static T[] ConvertToArray<T>(IList list)
+        {
+            return list.Cast<T>().ToArray();
+        }
+
+        public static object[] ConvertToArrayRuntime(IList list, Type elementType)
+        {
+            var convertMethod = typeof(ListExtensions).GetMethod("ConvertToArray", BindingFlags.Static | BindingFlags.Public, null, new[] { typeof(IList) }, null);
+            var genericMethod = convertMethod.MakeGenericMethod(elementType);
+            return (object[])genericMethod.Invoke(null, new object[] { list });
+        }
+    }
+
     ///<summary>Map values from S to T and/or vice versa</summary>
     ///<typeparam name="T">Target Type</typeparam>
     ///<typeparam name="S">Source Type</typeparam>
@@ -62,22 +78,26 @@ namespace POCO.Mapper
                         _mappedToName = ((MappedTo)_mappedTo).Name;
                     if (!string.IsNullOrEmpty(_mappedToName) && _outputProp.Name.Equals(_mappedToName))
                     {
-                        // * Validation for type mismatch
-                        if (!_outputProp.PropertyType.IsAssignableFrom(_convertProp.PropertyType) && !isCustomeType(_outputProp))
+                        // * Validation for type mismatch except for collections
+                        if (!_outputProp.PropertyType.IsAssignableFrom(_convertProp.PropertyType) && !isCustomeType(_outputProp)
+                            && !typeof(IEnumerable).IsAssignableFrom(_outputProp.PropertyType))
                             throw new IMapperException(string.Format("The source type ({0}) could not be converted to the target type ({1}).", _convertProp.PropertyType.Name, _outputProp.PropertyType.Name));
 
                         // * Check if Enum
                         else if (_outputProp.PropertyType.IsEnum)
                             _outputProp.SetValue(_output, Enum.ToObject(_outputProp.GetType(), _convertProp.GetValue(toConvert)));
 
-                        // * Check if IEnumerable (eg IList, List)
+                        // * Check if IEnumerable (eg IList, List and Arrays)
                         else if (_outputProp.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(_outputProp.PropertyType))
                         {
                             var _collection = (IEnumerable)_convertProp.GetValue(toConvert, null);
-                            var _listType = typeof(List<>);
 
                             // * Define and check the target output list
-                            var _constructedListType = _listType.MakeGenericType(_outputProp.PropertyType.GetGenericArguments());
+                            var _constructedListType = typeof(List<>).MakeGenericType(
+                                !_outputProp.PropertyType.IsArray ?
+                                _outputProp.PropertyType.GetGenericArguments()[0] :
+                                _outputProp.PropertyType.GetElementType()
+                            );
                             if (_constructedListType is null)
                                 throw new IMapperException("POCO.Mapper encountered an error with " + _outputProp.PropertyType.Name);
                             var _finalList = (IList)Activator.CreateInstance(_constructedListType);
@@ -86,10 +106,16 @@ namespace POCO.Mapper
                             foreach (object _obj in _collection)
                             {
                                 // * Call method again to map list objects
-                                object _result = map(_obj, _outputProp.PropertyType.GetGenericArguments()[0]);
+                                object _result = map(_obj,
+                                    !_outputProp.PropertyType.IsArray ?
+                                    _outputProp.PropertyType.GetGenericArguments()[0] :
+                                    _outputProp.PropertyType.GetElementType()
+                                );
                                 _finalList.Add(_result);
                             }
-                            _outputProp.SetValue(_output, _finalList);
+                            _outputProp.SetValue(_output, !_outputProp.PropertyType.IsArray ? _finalList
+                                : ListExtensions.ConvertToArrayRuntime(_finalList, _outputProp.PropertyType.GetElementType())
+                            );
                         }
 
                         // * Check if a custom type
