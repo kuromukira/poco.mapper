@@ -91,31 +91,33 @@ namespace POCO.Mapper
                         else if (_outputProp.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(_outputProp.PropertyType))
                         {
                             var _collection = (IEnumerable)_convertProp.GetValue(toConvert, null);
-
-                            // * Define and check the target output list
-                            var _constructedListType = typeof(List<>).MakeGenericType(
-                                !_outputProp.PropertyType.IsArray ?
-                                _outputProp.PropertyType.GetGenericArguments()[0] :
-                                _outputProp.PropertyType.GetElementType()
-                            );
-                            if (_constructedListType is null)
-                                throw new IMapperException("POCO.Mapper encountered an error with " + _outputProp.PropertyType.Name);
-                            var _finalList = (IList)Activator.CreateInstance(_constructedListType);
-
-                            // * Loop through the objects to be mapped
-                            foreach (object _obj in _collection)
+                            if (!(_collection is null))
                             {
-                                // * Call method again to map list objects
-                                object _result = map(_obj,
+                                // * Define and check the target output list
+                                var _constructedListType = typeof(List<>).MakeGenericType(
                                     !_outputProp.PropertyType.IsArray ?
                                     _outputProp.PropertyType.GetGenericArguments()[0] :
                                     _outputProp.PropertyType.GetElementType()
                                 );
-                                _finalList.Add(_result);
+                                if (_constructedListType is null)
+                                    throw new IMapperException("POCO.Mapper encountered an error with " + _outputProp.PropertyType.Name);
+                                var _finalList = (IList)Activator.CreateInstance(_constructedListType);
+
+                                // * Loop through the objects to be mapped
+                                foreach (object _obj in _collection)
+                                {
+                                    // * Call method again to map list objects
+                                    object _result = map(_obj,
+                                        !_outputProp.PropertyType.IsArray ?
+                                        _outputProp.PropertyType.GetGenericArguments()[0] :
+                                        _outputProp.PropertyType.GetElementType()
+                                    );
+                                    _finalList.Add(_result);
+                                }
+                                _outputProp.SetValue(_output, !_outputProp.PropertyType.IsArray ? _finalList
+                                    : ListExtensions.ConvertToArrayRuntime(_finalList, _outputProp.PropertyType.GetElementType())
+                                );
                             }
-                            _outputProp.SetValue(_output, !_outputProp.PropertyType.IsArray ? _finalList
-                                : ListExtensions.ConvertToArrayRuntime(_finalList, _outputProp.PropertyType.GetElementType())
-                            );
                         }
 
                         // * Check if a custom type
