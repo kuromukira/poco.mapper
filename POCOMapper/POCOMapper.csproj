@@ -15,12 +15,14 @@
       <Authors>Nor Gelera</Authors>
       <Product>POCO.Mapper</Product>
       <Version>1.2.0</Version>
-      <PackageReleaseNotes>- Fixed an issue with mapping values in IList&lt;&gt; and List&lt;&gt;
-- Fixed an issue when a collection to be mapped is empty
-- Added support for Array[] properties
-- IList, List and Array[] properties can be mapped to each other
-- When using IDictionary or other collection types, expect to get an exception
-- Improved deep mapping of POCO for list and arrays</PackageReleaseNotes>
+      <PackageReleaseNotes>
+        ** Fixed an issue with mapping values in IList&lt;&gt; and List&lt;&gt;
+        ** Fixed an issue when a collection to be mapped is empty
+        ** Added support for Array[] properties
+        ** IList, List and Array[] properties can be mapped to each other
+        ** When using IDictionary or other collection types, expect to get an exception
+        ** Improved deep mapping of POCO for list and arrays
+      </PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
