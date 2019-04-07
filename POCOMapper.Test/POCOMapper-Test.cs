@@ -16,23 +16,34 @@ namespace POCOMapper.Test
                 new Work
                 {
                     WorkId = Guid.NewGuid(),
+                    Title = ".NET Developer",
+                    Company = "Arcnays",
+                    Address = "Cebu",
+                    Status  = Global.Status.Active
+                },
+                new Work
+                {
+                    WorkId = Guid.NewGuid(),
                     Title = "Software Development and Production Manager",
                     Company = "Jinisys Software Inc",
-                    Address = "Cebu"
+                    Address = "Cebu",
+                    Status  = Global.Status.InActive
                 },
                 new Work
                 {
                     WorkId = Guid.NewGuid(),
                     Title = "Senior Software Engineer",
                     Company = "Jinisys Software Inc",
-                    Address = "Cebu"
+                    Address = "Cebu",
+                    Status  = Global.Status.InActive
                 },
                 new Work
                 {
                     WorkId = Guid.NewGuid(),
                     Title = "Junior Software Engineer",
                     Company = "root+ Technology Service",
-                    Address = "Cebu"
+                    Address = "Cebu",
+                    Status  = Global.Status.InActive
                 }
             };
         }
@@ -50,7 +61,8 @@ namespace POCOMapper.Test
                     WorkId = Guid.NewGuid(),
                     Title = ".NET Developer",
                     Company = "Arcanys",
-                    Address = "Cebu"
+                    Address = "Cebu",
+                    Status = Global.Status.Active
                 },
                 HistoryArray = WorkHistory().ToArray(),
                 HistoryList = WorkHistory()
@@ -72,7 +84,8 @@ namespace POCOMapper.Test
                         WorkId = Guid.NewGuid(),
                         Title = ".NET Developer",
                         Company = "Arcanys",
-                        Address = "Cebu"
+                        Address = "Cebu",
+                    Status = Global.Status.Active
                     },
                     HistoryArray=WorkHistory().ToArray(),
                     HistoryList=WorkHistory()
@@ -87,7 +100,8 @@ namespace POCOMapper.Test
                         WorkId = Guid.NewGuid(),
                         Title = "Angular Developer",
                         Company = "Google Inc",
-                        Address = "Cebu"
+                        Address = "Cebu",
+                    Status = Global.Status.Active
                     },
                     HistoryArray=WorkHistory().ToArray(),
                     HistoryList=WorkHistory()
@@ -102,7 +116,8 @@ namespace POCOMapper.Test
                         WorkId = Guid.NewGuid(),
                         Title = "Java Developer",
                         Company = "Oracle",
-                        Address = "Cebu"
+                        Address = "Cebu",
+                    Status = Global.Status.Active
                     },
                     HistoryArray=WorkHistory().ToArray(),
                     HistoryList=WorkHistory()
@@ -157,6 +172,11 @@ namespace POCOMapper.Test
         }
     }
 
+    public class Global
+    {
+        public enum Status { Active, InActive }
+    }
+
     /// <summary>
     /// POCO entity based on actual database table
     /// </summary>
@@ -185,6 +205,8 @@ namespace POCOMapper.Test
         public string Company { get; set; }
         [MappedTo("WorkAddress")]
         public string Address { get; set; }
+        [MappedTo("WorkStatus")]
+        public Global.Status Status { get; set; } = Global.Status.Active;
     }
 
     /// <summary>
@@ -206,5 +228,6 @@ namespace POCOMapper.Test
         public string JobTitle { get; set; }
         public string CompanyName { get; set; }
         public string WorkAddress { get; set; }
+        public Global.Status WorkStatus { get; set; } = Global.Status.Active;
     }
 }

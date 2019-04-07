@@ -85,7 +85,7 @@ namespace POCO.Mapper
 
                         // * Check if Enum
                         else if (_outputProp.PropertyType.IsEnum)
-                            _outputProp.SetValue(_output, Enum.ToObject(_outputProp.GetType(), _convertProp.GetValue(toConvert)));
+                            _outputProp.SetValue(_output, Enum.ToObject(_outputProp.PropertyType, _convertProp.GetValue(toConvert)));
 
                         // * Check if IEnumerable (eg IList, List and Arrays)
                         else if (_outputProp.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(_outputProp.PropertyType))
