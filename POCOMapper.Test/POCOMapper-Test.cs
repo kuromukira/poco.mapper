@@ -70,8 +70,8 @@ namespace POCOMapper.Test
                 StringArray = new List<string> { "A", "B", "C", "D" }.ToArray(),
                 StringList = new List<string> { "A", "B", "C", "D" },
 
-                //DecimalArray = new List<decimal> { 0.1m, 0.2m, 0.3m, 0.4m }.ToArray(),
-                //DecimalList = new List<decimal> { 0.1m, 0.2m, 0.3m, 0.4m },
+                DecimalArray = new List<decimal> { 0.1m, 0.2m, 0.3m, 0.4m }.ToArray(),
+                DecimalList = new List<decimal> { 0.1m, 0.2m, 0.3m, 0.4m },
 
                 IntArray = new List<int> { 1, 2, 3, 4 }.ToArray(),
                 IntList = new List<int> { 1, 2, 3, 4 },

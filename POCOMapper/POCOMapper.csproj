@@ -6,7 +6,7 @@
 
   <PropertyGroup>
       <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-      <Description>POCO stands for "Plain Old C# Object" or "Plain Old CLR Object", depending on who you ask. This library is a custom mapper for POCOs (map values of identical properties from one POCO to another POCO).</Description>
+      <Description>An alternative "Plain Old C# Objects" mapper with minimal configuration required.</Description>
       <Copyright>Nor Gelera 2019</Copyright>
       <PackageProjectUrl>https://github.com/norgelera/poco.mapper</PackageProjectUrl>
       <RepositoryUrl>https://github.com/norgelera/poco.mapper</RepositoryUrl>
@@ -14,8 +14,10 @@
       <RepositoryType>Git</RepositoryType>
       <Authors>Nor Gelera</Authors>
       <Product>POCO.Mapper</Product>
-      <Version>1.2.1</Version>
-      <PackageReleaseNotes>- Fixed an issue with mapping of values for Enum Types</PackageReleaseNotes>
+      <Version>1.2.2</Version>
+      <PackageReleaseNotes>- Fixed an issue with mapping values from list or array of string or any primitive types</PackageReleaseNotes>
+      <AssemblyVersion>1.2.2.0</AssemblyVersion>
+      <FileVersion>1.2.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -113,10 +113,8 @@ namespace POCO.Mapper
                                     if (isInnerElementCustom)
                                     {
                                         // * Call method again to map list objects
-                                        object _result = map(_obj,
-                                            !_outputProp.PropertyType.IsArray ?
-                                            _outputProp.PropertyType.GetGenericArguments()[0] :
-                                            _outputProp.PropertyType.GetElementType()
+                                        object _result = map(_obj, !_outputProp.PropertyType.IsArray ?
+                                            _outputProp.PropertyType.GetGenericArguments()[0] : _outputProp.PropertyType.GetElementType()
                                         );
                                         _finalList.Add(_result);
                                     }
@@ -124,10 +122,14 @@ namespace POCO.Mapper
                                     else _finalList.Add(_obj);
                                 }
 
-                                if (isInnerElementCustom)
-                                    _outputProp.SetValue(_output, !_outputProp.PropertyType.IsArray ? _finalList
-                                        : ListExtensions.ConvertToArrayRuntime(_finalList, _outputProp.PropertyType.GetElementType())
-                                    );
+                                // * Assign to target property
+                                if (_outputProp.PropertyType.IsArray)
+                                {
+                                    var _arrayList = Array.CreateInstance(_outputProp.PropertyType.GetElementType(), _finalList.Count);
+                                    for (int i = 0; i < _finalList.Count; i++)
+                                        _arrayList.SetValue(Convert.ChangeType(_finalList[i], _outputProp.PropertyType.GetElementType()), i);
+                                    _outputProp.SetValue(_output, _arrayList);
+                                }
                                 else _outputProp.SetValue(_output, _finalList);
                             }
                         }
