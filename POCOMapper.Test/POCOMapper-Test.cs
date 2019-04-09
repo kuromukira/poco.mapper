@@ -65,7 +65,19 @@ namespace POCOMapper.Test
                     Status = Global.Status.Active
                 },
                 HistoryArray = WorkHistory().ToArray(),
-                HistoryList = WorkHistory()
+                HistoryList = WorkHistory(),
+
+                StringArray = new List<string> { "A", "B", "C", "D" }.ToArray(),
+                StringList = new List<string> { "A", "B", "C", "D" },
+
+                //DecimalArray = new List<decimal> { 0.1m, 0.2m, 0.3m, 0.4m }.ToArray(),
+                //DecimalList = new List<decimal> { 0.1m, 0.2m, 0.3m, 0.4m },
+
+                IntArray = new List<int> { 1, 2, 3, 4 }.ToArray(),
+                IntList = new List<int> { 1, 2, 3, 4 },
+
+                LongArray = new List<long> { 1, 2, 3, 4 }.ToArray(),
+                LongList = new List<long> { 1, 2, 3, 4 }
             };
         }
 
@@ -155,6 +167,15 @@ namespace POCOMapper.Test
             Assert.Equal(employee.Work.Company, employeeVM.Work.CompanyName);
             Assert.Equal(employee.Work.Address, employeeVM.Work.WorkAddress);
 
+            Assert.Equal(employee.IntArray, employeeVM.IntArrayVM);
+            Assert.Equal(employee.IntList, employeeVM.IntListVM);
+
+            Assert.Equal(employee.DecimalArray, employeeVM.DecimalArrayVM);
+            Assert.Equal(employee.DecimalList, employeeVM.DecimalListVM);
+
+            Assert.Equal(employee.LongArray, employeeVM.LongArrayVM);
+            Assert.Equal(employee.LongList, employeeVM.LongListVM);
+
             // Check Array
             for (int i = 0; i < employee.HistoryArray.Length; i++)
                 AssertResults(employee.HistoryArray[i], employeeVM.WorkHistoryArray[i]);
@@ -194,6 +215,23 @@ namespace POCOMapper.Test
         public Work[] HistoryArray { get; set; }
         [MappedTo("WorkHistoryList")]
         public IList<Work> HistoryList { get; set; }
+
+        [MappedTo("StringListVM")]
+        public IList<string> StringList { get; set; }
+        [MappedTo("StringArrayVM")]
+        public string[] StringArray { get; set; }
+        [MappedTo("DecimalListVM")]
+        public IList<decimal> DecimalList { get; set; }
+        [MappedTo("DecimalArrayVM")]
+        public decimal[] DecimalArray { get; set; }
+        [MappedTo("IntListVM")]
+        public IList<int> IntList { get; set; }
+        [MappedTo("IntArrayVM")]
+        public int[] IntArray { get; set; }
+        [MappedTo("LongListVM")]
+        public IList<long> LongList { get; set; }
+        [MappedTo("LongArrayVM")]
+        public long[] LongArray { get; set; }
     }
 
     public class Work
@@ -221,6 +259,14 @@ namespace POCOMapper.Test
         public WorkViewModel Work { get; set; } = new WorkViewModel();
         public WorkViewModel[] WorkHistoryArray { get; set; }
         public IList<WorkViewModel> WorkHistoryList { get; set; }
+        public IList<string> StringListVM { get; set; }
+        public string[] StringArrayVM { get; set; }
+        public IList<decimal> DecimalListVM { get; set; }
+        public decimal[] DecimalArrayVM { get; set; }
+        public IList<int> IntListVM { get; set; }
+        public int[] IntArrayVM { get; set; }
+        public IList<long> LongListVM { get; set; }
+        public long[] LongArrayVM { get; set; }
     }
 
     public class WorkViewModel
