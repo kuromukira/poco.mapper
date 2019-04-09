@@ -79,7 +79,7 @@ namespace POCO.Mapper
                     if (!string.IsNullOrEmpty(_mappedToName) && _outputProp.Name.Equals(_mappedToName))
                     {
                         // * Validation for type mismatch except for collections
-                        if (!_outputProp.PropertyType.IsAssignableFrom(_convertProp.PropertyType) && !isCustomeType(_outputProp)
+                        if (!_outputProp.PropertyType.IsAssignableFrom(_convertProp.PropertyType) && !isCustomType(_outputProp.PropertyType)
                             && !typeof(IEnumerable).IsAssignableFrom(_outputProp.PropertyType))
                             throw new IMapperException(string.Format("The source type ({0}) could not be converted to the target type ({1}).", _convertProp.PropertyType.Name, _outputProp.PropertyType.Name));
 
@@ -102,26 +102,40 @@ namespace POCO.Mapper
                                 if (_constructedListType is null)
                                     throw new IMapperException("POCO.Mapper encountered an error with " + _outputProp.PropertyType.Name);
                                 var _finalList = (IList)Activator.CreateInstance(_constructedListType);
+                                bool isInnerElementCustom = !_outputProp.PropertyType.IsArray ?
+                                    isCustomType(_outputProp.PropertyType.GetGenericArguments()[0]) :
+                                    isCustomType(_outputProp.PropertyType.GetElementType());
 
                                 // * Loop through the objects to be mapped
                                 foreach (object _obj in _collection)
                                 {
-                                    // * Call method again to map list objects
-                                    object _result = map(_obj,
-                                        !_outputProp.PropertyType.IsArray ?
-                                        _outputProp.PropertyType.GetGenericArguments()[0] :
-                                        _outputProp.PropertyType.GetElementType()
-                                    );
-                                    _finalList.Add(_result);
+                                    // * For custom types
+                                    if (isInnerElementCustom)
+                                    {
+                                        // * Call method again to map list objects
+                                        object _result = map(_obj, !_outputProp.PropertyType.IsArray ?
+                                            _outputProp.PropertyType.GetGenericArguments()[0] : _outputProp.PropertyType.GetElementType()
+                                        );
+                                        _finalList.Add(_result);
+                                    }
+                                    // * For native types
+                                    else _finalList.Add(_obj);
                                 }
-                                _outputProp.SetValue(_output, !_outputProp.PropertyType.IsArray ? _finalList
-                                    : ListExtensions.ConvertToArrayRuntime(_finalList, _outputProp.PropertyType.GetElementType())
-                                );
+
+                                // * Assign to target property
+                                if (_outputProp.PropertyType.IsArray)
+                                {
+                                    var _arrayList = Array.CreateInstance(_outputProp.PropertyType.GetElementType(), _finalList.Count);
+                                    for (int i = 0; i < _finalList.Count; i++)
+                                        _arrayList.SetValue(Convert.ChangeType(_finalList[i], _outputProp.PropertyType.GetElementType()), i);
+                                    _outputProp.SetValue(_output, _arrayList);
+                                }
+                                else _outputProp.SetValue(_output, _finalList);
                             }
                         }
 
                         // * Check if a custom type
-                        else if (isCustomeType(_outputProp))
+                        else if (isCustomType(_outputProp.PropertyType))
                             _outputProp.SetValue(_output, map(_convertProp.GetValue(toConvert), _outputProp.PropertyType));
 
                         // * Default
@@ -132,9 +146,9 @@ namespace POCO.Mapper
             }
             return _output;
 
-            bool isCustomeType(PropertyInfo outputProp)
+            bool isCustomType(Type outputType)
             {
-                return (!outputProp.PropertyType.IsPrimitive && outputProp.PropertyType.IsClass && !outputProp.PropertyType.IsAbstract && outputProp.PropertyType != typeof(string));
+                return (!outputType.IsPrimitive && outputType.IsClass && !outputType.IsAbstract && outputType != typeof(string));
             }
         }
 
