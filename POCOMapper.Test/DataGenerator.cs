@@ -1,4 +1,5 @@
-﻿using System;
+﻿using POCO.Mapper.Extension;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace POCO.Mapper.Test
         public enum DataState { New, Updated, Removed }
     }
 
-    internal class SourceModel
+    internal class SourceModel : ModelMap
     {
         [MappedTo("GUID")]
         public Guid Id { get; set; }

@@ -4,22 +4,31 @@
         <name>POCOMapper</name>
     </assembly>
     <members>
-        <member name="T:POCO.Mapper.IMapper`2">
-            <summary>Map values from S to T and/or vice versa</summary>
+        <member name="T:POCO.Mapper.Extension.ModelMap">
+            <summary>Inherit from this class to use extensions</summary>
+        </member>
+        <member name="T:POCO.Mapper.Extension.POCOMapperExtensions">
+            <summary>Model Mapper Extension Methods</summary>
+        </member>
+        <member name="M:POCO.Mapper.Extension.POCOMapperExtensions.MapTo``1(POCO.Mapper.Extension.ModelMap)">
+            <summary>Map values from current POCO to Target Type</summary>
             <typeparam name="T">Target Type</typeparam>
-            <typeparam name="S">Source Type</typeparam>
         </member>
-        <member name="M:POCO.Mapper.IMapper`2.from(`1)">
-            <summary>Map values from S to T</summary>
+        <member name="M:POCO.Mapper.Extension.POCOMapperExtensions.MapToList``1(System.Collections.Generic.IEnumerable{POCO.Mapper.Extension.ModelMap})">
+            <summary>Map values from current POCO to Target Type</summary>
+            <typeparam name="T">Target Type</typeparam>
         </member>
-        <member name="M:POCO.Mapper.IMapper`2.from(`0)">
-            <summary>Map values from T to S</summary>
+        <member name="M:POCO.Mapper.Extension.POCOMapperExtensions.MapToList``1(POCO.Mapper.Extension.ModelMap[])">
+            <summary>Map values from current POCO to Target Type</summary>
+            <typeparam name="T">Target Type</typeparam>
         </member>
-        <member name="M:POCO.Mapper.IMapper`2.from(System.Collections.Generic.IList{`1})">
-            <summary>Map list from S to T</summary>
+        <member name="M:POCO.Mapper.Extension.POCOMapperExtensions.MapToArray``1(System.Collections.Generic.IEnumerable{POCO.Mapper.Extension.ModelMap})">
+            <summary>Map values from current POCO to Target Type</summary>
+            <typeparam name="T">Target Type</typeparam>
         </member>
-        <member name="M:POCO.Mapper.IMapper`2.from(System.Collections.Generic.IList{`0})">
-            <summary>Map list from T to S</summary>
+        <member name="M:POCO.Mapper.Extension.POCOMapperExtensions.MapToArray``1(POCO.Mapper.Extension.ModelMap[])">
+            <summary>Map values from current POCO to Target Type</summary>
+            <typeparam name="T">Target Type</typeparam>
         </member>
         <member name="T:POCO.Mapper.MappedTo">
             <summary>Mapper Attribute Target</summary>
@@ -43,13 +52,22 @@
         <member name="M:POCO.Mapper.IMapperException.#ctor(System.String,System.Exception)">
             <summary></summary>
         </member>
-        <member name="T:POCO.Mapper.ListExtensions">
-            <summary>Static helper class to convert list to arrays</summary>
+        <member name="T:POCO.Mapper.IMapper`2">
+            <summary>Map values from S to T and/or vice versa</summary>
+            <typeparam name="T">Target Type</typeparam>
+            <typeparam name="S">Source Type</typeparam>
         </member>
-        <member name="T:POCO.Mapper.POCOMapperExtensions">
-            <summary>
-            Model Mapper Extension Methods
-            </summary>
+        <member name="M:POCO.Mapper.IMapper`2.from(`1)">
+            <summary>Map values from S to T</summary>
+        </member>
+        <member name="M:POCO.Mapper.IMapper`2.from(`0)">
+            <summary>Map values from T to S</summary>
+        </member>
+        <member name="M:POCO.Mapper.IMapper`2.from(System.Collections.Generic.IList{`1})">
+            <summary>Map list from S to T</summary>
+        </member>
+        <member name="M:POCO.Mapper.IMapper`2.from(System.Collections.Generic.IList{`0})">
+            <summary>Map list from T to S</summary>
         </member>
         <member name="T:POCO.Mapper.ModelMapper`2">
             <summary>Map values from S to T and/or vice versa</summary>
