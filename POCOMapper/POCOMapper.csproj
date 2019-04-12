@@ -14,10 +14,10 @@
       <RepositoryType>Git</RepositoryType>
       <Authors>Nor Gelera</Authors>
       <Product>POCO.Mapper</Product>
-      <Version>1.2.2</Version>
-      <PackageReleaseNotes>- Fixed an issue with mapping values from list or array of string or any primitive types</PackageReleaseNotes>
-      <AssemblyVersion>1.2.2.0</AssemblyVersion>
-      <FileVersion>1.2.2.0</FileVersion>
+      <Version>2.0.0</Version>
+      <PackageReleaseNotes>- You can directly convert a POCO to a target type using extension methods. Visit our github page for more details.</PackageReleaseNotes>
+      <AssemblyVersion>2.0.0.0</AssemblyVersion>
+      <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

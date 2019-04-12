@@ -1,4 +1,6 @@
-# POCO-Mapper
+# POCO.Mapper
+An alternative "Plain Old C# Objects" mapper with minimal configuration required.
+
 POCO stands for "Plain Old C# Object" or "Plain Old CLR Object", depending on who you ask. This library is a custom mapper for POCOs (map values of identical properties from one POCO to another POCO). Minimal configuration is needed.
 
 <img alt="Azure DevOps builds (branch)" src="https://img.shields.io/azure-devops/build/norgelera/dabf89f6-646a-4c51-ac54-7349811a3405/6/master.svg">
@@ -10,13 +12,16 @@ POCO stands for "Plain Old C# Object" or "Plain Old CLR Object", depending on wh
 Add as reference in your class
 ```c#
 using POCO.Mapper;
+using POCO.Mapper.Extension;
 ```
-Let's say you have a different POCO for database models and for view-models.
+Let's say you have a different POCO for database models and for view-models. ```MappedTo("")``` attribute is required to map the property to a target POCO.
+
+***Note***: *As of v2.0.0, you'll have an option to use extension methods or the IMapper interface. For extension methods, it is required that a POCO inherits from ```POCO.Mapper.Extension.ModelMap```.
 ```c#
 /// <summary>
 /// POCO entity based on actual database table
 /// </summary>
-public class Employee
+public class Employee : ModelMap
 {
     [MappedTo("Id")]
     public long EmployeeId { get; set; }
@@ -31,7 +36,7 @@ public class Employee
     public Work Work { get; set; } = new Work();
 }
 
-public class Work
+public class Work : ModelMap
 {
     public Guid WorkId { get; set; } // Will not be mapped
     [MappedTo("JobTitle")]
@@ -58,9 +63,9 @@ public class WorkViewModel
     public string WorkAddress { get; set; }
 }
 ```
-The ```MappedTo("")``` attribute is required to map the property to a target POCO.
 
-Initialize the ```IMapper``` interface.
+### Using ```IMapper``` Interface
+
 ```c#
 void Map()
 {
@@ -85,9 +90,34 @@ void Map()
     EmployeeViewModel _employeeViewModel = _mapper.from(_employee);
 }
 ```
+
+### Using ```Extension Methods```
+
+```c#
+void Map()
+{
+    // Example Data Only
+    Employee _employee = new Employee
+    {
+        EmployeeId = 1,
+        FirstName = "Nor",
+        Lastname = "Gelera",
+        Work = new Work
+        {
+            WorkId = Guid.NewGuid(),
+            Title = ".NET Developer",
+            Address = "Cebu"
+        }
+    };
+
+    // Map to view-model
+    EmployeeViewModel _employeeViewModel = _employee.MapTo<EmployeeViewModel>();
+}
+```
+
 The result would be an instance of ```EmployeeViewModel``` with values for ```Id``` and ```EmployeeName``` from ```Employee``` entity. ```FirstName``` and ```LastName``` properties of ```Employee``` entity will be ignored by **POCOMapper** and will not be mapped to ```EmployeeViewModel```. Values for ```Work``` property of ```Employee``` will also be mapped to ```WorkViewModel```.
 
-***Note***: *As of the current version, ```POCO.Mapper``` also supports mapping of values for ```IList``` properties.*
+***Note***: *As of the current version, ```POCO.Mapper``` also supports mapping of values for ```IList<>```, ```List<>``` and ```Array[]``` properties (_interchangeably_).*
 
 # Contributors
 - [kuromukira](https://www.twitter.com/norgelera)
