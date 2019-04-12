@@ -31,7 +31,7 @@ namespace POCO.Mapper.Test
         public void Can_Map_Values_Using_Extension_Methods(int sizes)
         {
             IList<SourceModel> _source = DataGenerator.GenerateSourceModels(sizes);
-            IList<TargetModel> _target = _source.MapToList<TargetModel>();
+            TargetModel[] _target = _source.MapToArray<TargetModel>();
 
             Assert.NotNull(_target);
         }
