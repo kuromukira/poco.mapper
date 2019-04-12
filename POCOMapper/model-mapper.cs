@@ -59,12 +59,17 @@ namespace POCO.Mapper
         }
     }
 
-    ///<summary>Map values from S to T and/or vice versa</summary>
-    ///<typeparam name="T">Target Type</typeparam>
-    ///<typeparam name="S">Source Type</typeparam>
-    public class ModelMapper<T, S> : IMapper<T, S>
+    /// <summary>
+    /// Model Mapper Extension Methods
+    /// </summary>
+    public static class POCOMapperExtensions
     {
-        private object map(object toConvert, Type targetType)
+
+    }
+
+    internal class ModelMapperCommon
+    {
+        public object Map(object toConvert, Type targetType)
         {
             object _output = Activator.CreateInstance(targetType);
             foreach (PropertyInfo _convertProp in toConvert.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
@@ -113,7 +118,7 @@ namespace POCO.Mapper
                                     if (isInnerElementCustom)
                                     {
                                         // * Call method again to map list objects
-                                        object _result = map(_obj, !_outputProp.PropertyType.IsArray ?
+                                        object _result = Map(_obj, !_outputProp.PropertyType.IsArray ?
                                             _outputProp.PropertyType.GetGenericArguments()[0] : _outputProp.PropertyType.GetElementType()
                                         );
                                         _finalList.Add(_result);
@@ -136,7 +141,7 @@ namespace POCO.Mapper
 
                         // * Check if a custom type
                         else if (isCustomType(_outputProp.PropertyType))
-                            _outputProp.SetValue(_output, map(_convertProp.GetValue(toConvert), _outputProp.PropertyType));
+                            _outputProp.SetValue(_output, Map(_convertProp.GetValue(toConvert), _outputProp.PropertyType));
 
                         // * Default
                         else _outputProp.SetValue(_output, _convertProp.GetValue(toConvert));
@@ -151,15 +156,23 @@ namespace POCO.Mapper
                 return (!outputType.IsPrimitive && outputType.IsClass && !outputType.IsAbstract && outputType != typeof(string));
             }
         }
+    }
+
+    ///<summary>Map values from S to T and/or vice versa</summary>
+    ///<typeparam name="T">Target Type</typeparam>
+    ///<typeparam name="S">Source Type</typeparam>
+    public class ModelMapper<T, S> : IMapper<T, S>
+    {
+        ModelMapperCommon Common = new ModelMapperCommon();
 
         T IMapper<T, S>.from(S source)
         {
-            return (T)map(source, typeof(T));
+            return (T)Common.Map(source, typeof(T));
         }
 
         S IMapper<T, S>.from(T target)
         {
-            return (S)map(target, typeof(S));
+            return (S)Common.Map(target, typeof(S));
         }
 
         IList<T> IMapper<T, S>.from(IList<S> source)

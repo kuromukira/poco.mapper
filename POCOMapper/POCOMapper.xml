@@ -46,6 +46,11 @@
         <member name="T:POCO.Mapper.ListExtensions">
             <summary>Static helper class to convert list to arrays</summary>
         </member>
+        <member name="T:POCO.Mapper.POCOMapperExtensions">
+            <summary>
+            Model Mapper Extension Methods
+            </summary>
+        </member>
         <member name="T:POCO.Mapper.ModelMapper`2">
             <summary>Map values from S to T and/or vice versa</summary>
             <typeparam name="T">Target Type</typeparam>
