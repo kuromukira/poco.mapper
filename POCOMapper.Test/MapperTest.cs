@@ -11,10 +11,7 @@ namespace POCO.Mapper.Test
         private IMapper<TargetModel, SourceModel> lMapper { get; } = new ModelMapper<TargetModel, SourceModel>();
 
         [Theory]
-        [InlineData(10)]
-        [InlineData(100)]
-        [InlineData(500)]
-        [InlineData(1000)]
+        [InlineData(1000000)]
         public void Can_Map_Values_Using_IMapper(int sizes)
         {
             IList<SourceModel> _source = DataGenerator.GenerateSourceModels(sizes);
@@ -24,10 +21,7 @@ namespace POCO.Mapper.Test
         }
 
         [Theory]
-        [InlineData(10)]
-        [InlineData(100)]
-        [InlineData(500)]
-        [InlineData(1000)]
+        [InlineData(1000000)]
         public void Can_Map_Values_Using_Extension_Methods(int sizes)
         {
             IList<SourceModel> _source = DataGenerator.GenerateSourceModels(sizes);
