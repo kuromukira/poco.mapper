@@ -218,7 +218,6 @@ namespace POCO.Mapper.Test
         }
 
         internal IList<SourceModel> GenerateSourceModels(int limit) => Enumerable.Range(1, limit).Select(i => GenerateSourceModel()).ToList();
-
         internal MultipleMapSourceModel GenerateMultiFieldSourceModel()
         {
             return new MultipleMapSourceModel
