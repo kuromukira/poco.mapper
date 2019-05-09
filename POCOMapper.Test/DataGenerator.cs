@@ -124,10 +124,12 @@ namespace POCO.Mapper.Test
 
     internal class MultipleMapSourceModel : ModelMap
     {
-        [MappedTo("STRING", "STR")]
+        [MappedTo("STR")]
+        [MappedTo("STRING")]
         public string Text { get; set; }
 
-        [MappedTo("INTEGER", "INT")]
+        [MappedTo("INT")]
+        [MappedTo("INTEGER")]
         public int Number { get; set; }
     }
 

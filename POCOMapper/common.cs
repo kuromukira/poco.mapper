@@ -13,14 +13,13 @@ namespace POCO.Mapper.Common
             object _output = Activator.CreateInstance(targetType);
             foreach (PropertyInfo _convertProp in toConvert.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                foreach (PropertyInfo _outputProp in _output.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                // * Get custom attribute name
+                var _mappedTo = _convertProp.GetCustomAttributes(typeof(MappedTo), true);
+                MappedTo[] _mappedToName = ((MappedTo[])(_mappedTo ?? new MappedTo[] { }));
+                foreach (MappedTo _mappedName in _mappedToName)
                 {
-                    // * Get custom attribute name
-                    var _mappedTo = _convertProp.GetCustomAttributes(typeof(MappedTo), true).FirstOrDefault();
-                    string[] _mappedToName = new string[] { };
-                    if (_mappedTo != null)
-                        _mappedToName = ((MappedTo)_mappedTo).Name;
-                    if (_mappedToName.Any() && _mappedToName.Contains(_outputProp.Name))
+                    // * Loop only through all properties that matched the target mapped name
+                    foreach (PropertyInfo _outputProp in _output.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(prop => prop.Name.Equals(_mappedName.Name)).ToList())
                     {
                         // * Validation for type mismatch except for collections
                         if (!_outputProp.PropertyType.IsAssignableFrom(_convertProp.PropertyType) && !isCustomType(_outputProp.PropertyType)

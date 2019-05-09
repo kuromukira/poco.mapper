@@ -36,7 +36,7 @@
         <member name="P:POCO.Mapper.MappedTo.Name">
             <summary></summary>
         </member>
-        <member name="M:POCO.Mapper.MappedTo.#ctor(System.String[])">
+        <member name="M:POCO.Mapper.MappedTo.#ctor(System.String)">
             <summary>Map to field</summary>
             <param name="name">Field Name</param>
         </member>

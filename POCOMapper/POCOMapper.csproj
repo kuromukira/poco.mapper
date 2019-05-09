@@ -15,7 +15,7 @@
       <Authors>Nor Gelera</Authors>
       <Product>POCO.Mapper</Product>
       <Version>2.1.0</Version>
-      <PackageReleaseNotes>- You can now add multiple MappedTo values.</PackageReleaseNotes>
+      <PackageReleaseNotes>- You can now add multiple MappedTo attribute.</PackageReleaseNotes>
       <AssemblyVersion>2.1.0.0</AssemblyVersion>
       <FileVersion>2.1.0.0</FileVersion>
   </PropertyGroup>
