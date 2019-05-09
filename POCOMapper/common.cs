@@ -17,10 +17,10 @@ namespace POCO.Mapper.Common
                 {
                     // * Get custom attribute name
                     var _mappedTo = _convertProp.GetCustomAttributes(typeof(MappedTo), true).FirstOrDefault();
-                    string _mappedToName = string.Empty;
+                    string[] _mappedToName = new string[] { };
                     if (_mappedTo != null)
                         _mappedToName = ((MappedTo)_mappedTo).Name;
-                    if (!string.IsNullOrEmpty(_mappedToName) && _outputProp.Name.Equals(_mappedToName))
+                    if (_mappedToName.Any() && _mappedToName.Contains(_outputProp.Name))
                     {
                         // * Validation for type mismatch except for collections
                         if (!_outputProp.PropertyType.IsAssignableFrom(_convertProp.PropertyType) && !isCustomType(_outputProp.PropertyType)

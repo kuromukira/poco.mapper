@@ -122,13 +122,33 @@ namespace POCO.Mapper.Test
         public IList<object> OBJECT_LIST { get; set; }
     }
 
-    internal class DataGenerator
+    internal class MultipleMapSourceModel : ModelMap
     {
-        private readonly Random _random = new Random();
+        [MappedTo("STRING", "STR")]
+        public string Text { get; set; }
 
-        internal int Number(int max = 9) => _random.Next(0, max);
+        [MappedTo("INTEGER", "INT")]
+        public int Number { get; set; }
+    }
 
-        internal string Word()
+    internal class MultipleMapTargetModel
+    {
+        public string STRING { get; set; }
+        public string STR { get; set; }
+
+        public int INTEGER { get; set; }
+        public int INT { get; set; }
+    }
+
+    static class ValueGenerator
+    {
+        private readonly static Random _random = new Random();
+
+        internal static int RandomNumber() => _random.Next(1, 50);
+
+        internal static int Number(int max = 9) => _random.Next(0, max);
+
+        internal static string Word()
         {
             int _size = _random.Next(3, 5);
             StringBuilder _builder = new StringBuilder(string.Empty);
@@ -137,50 +157,57 @@ namespace POCO.Mapper.Test
             return _builder.ToString();
         }
 
-        internal char Character() => (char)_random.Next(65, 90);
+        internal static char Character() => (char)_random.Next(65, 90);
+    }
 
+    internal class DataGenerator
+    {
         internal InnerSourceModel GenerateInnerSource()
         {
             return new InnerSourceModel
             {
-                Object = Word(),
-                ObjectArray = new List<object> { Word(), Number(), Character() }.ToArray(),
-                ObjectList = new List<object> { Word(), Number(), Character() }
+                Object = ValueGenerator.Word(),
+                ObjectArray = new List<object> { ValueGenerator.Word(),
+                    ValueGenerator.Number(),
+                    ValueGenerator.Character() }.ToArray(),
+                ObjectList = new List<object> { ValueGenerator.Word(),
+                    ValueGenerator.Number(),
+                    ValueGenerator.Character() }
             };
         }
 
         internal SourceModel GenerateSourceModel()
         {
-            int _listSize = _random.Next(1, 50);
+            int _listSize = ValueGenerator.RandomNumber();
             return new SourceModel
             {
                 Id = Guid.NewGuid(),
-                Name = Word(),
-                Character = Character(),
-                Number = Number(),
-                LongNumber = Number(1000),
-                Money = Number(10000),
-                Currency = Number(10000),
-                Percentage = Number(100),
+                Name = ValueGenerator.Word(),
+                Character = ValueGenerator.Character(),
+                Number = ValueGenerator.Number(),
+                LongNumber = ValueGenerator.Number(1000),
+                Money = ValueGenerator.Number(10000),
+                Currency = ValueGenerator.Number(10000),
+                Percentage = ValueGenerator.Number(100),
                 State = CommonModel.DataState.New,
 
-                NameArray = Enumerable.Range(1, _listSize).Select(i => Word()).ToArray(),
-                NameList = Enumerable.Range(1, _listSize).Select(i => Word()).ToList(),
+                NameArray = Enumerable.Range(1, _listSize).Select(i => ValueGenerator.Word()).ToArray(),
+                NameList = Enumerable.Range(1, _listSize).Select(i => ValueGenerator.Word()).ToList(),
 
-                NumberArray = Enumerable.Range(1, _listSize).Select(i => Number()).ToArray(),
-                NumberList = Enumerable.Range(1, _listSize).Select(i => Number()).ToList(),
+                NumberArray = Enumerable.Range(1, _listSize).Select(i => ValueGenerator.Number()).ToArray(),
+                NumberList = Enumerable.Range(1, _listSize).Select(i => ValueGenerator.Number()).ToList(),
 
-                LongArray = Enumerable.Range(1, _listSize).Select(i => (long)Number()).ToArray(),
-                LongList = Enumerable.Range(1, _listSize).Select(i => (long)Number()).ToList(),
+                LongArray = Enumerable.Range(1, _listSize).Select(i => (long)ValueGenerator.Number()).ToArray(),
+                LongList = Enumerable.Range(1, _listSize).Select(i => (long)ValueGenerator.Number()).ToList(),
 
-                DecimalArray = Enumerable.Range(1, _listSize).Select(i => (decimal)Number()).ToArray(),
-                DecimalList = Enumerable.Range(1, _listSize).Select(i => (decimal)Number()).ToList(),
+                DecimalArray = Enumerable.Range(1, _listSize).Select(i => (decimal)ValueGenerator.Number()).ToArray(),
+                DecimalList = Enumerable.Range(1, _listSize).Select(i => (decimal)ValueGenerator.Number()).ToList(),
 
-                DoubleArray = Enumerable.Range(1, _listSize).Select(i => (double)Number()).ToArray(),
-                DoubleList = Enumerable.Range(1, _listSize).Select(i => (double)Number()).ToList(),
+                DoubleArray = Enumerable.Range(1, _listSize).Select(i => (double)ValueGenerator.Number()).ToArray(),
+                DoubleList = Enumerable.Range(1, _listSize).Select(i => (double)ValueGenerator.Number()).ToList(),
 
-                FloatArray = Enumerable.Range(1, _listSize).Select(i => (float)Number()).ToArray(),
-                FloatList = Enumerable.Range(1, _listSize).Select(i => (float)Number()).ToList(),
+                FloatArray = Enumerable.Range(1, _listSize).Select(i => (float)ValueGenerator.Number()).ToArray(),
+                FloatList = Enumerable.Range(1, _listSize).Select(i => (float)ValueGenerator.Number()).ToList(),
 
                 InnerSource = GenerateInnerSource(),
                 InnerSourceArray = Enumerable.Range(1, _listSize).Select(i => GenerateInnerSource()).ToArray(),
@@ -189,5 +216,16 @@ namespace POCO.Mapper.Test
         }
 
         internal IList<SourceModel> GenerateSourceModels(int limit) => Enumerable.Range(1, limit).Select(i => GenerateSourceModel()).ToList();
+
+        internal MultipleMapSourceModel GenerateMultiFieldSourceModel()
+        {
+            return new MultipleMapSourceModel
+            {
+                Number = ValueGenerator.Number(),
+                Text = ValueGenerator.Word()
+            };
+        }
+
+        internal IList<MultipleMapSourceModel> GenerateMultiFieldSourceModels(int limit) => Enumerable.Range(1, limit).Select(i => GenerateMultiFieldSourceModel()).ToList();
     }
 }

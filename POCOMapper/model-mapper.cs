@@ -10,10 +10,10 @@ namespace POCO.Mapper
     public class MappedTo : Attribute
     {
         /// <summary></summary>
-        public string Name { get; }
+        public string[] Name { get; }
         /// <summary>Map to field</summary>
         /// <param name="name">Field Name</param>
-        public MappedTo(string name) => Name = name;
+        public MappedTo(params string[] name) => Name = name;
     }
 
     /// <summary></summary>
