@@ -10,6 +10,8 @@ namespace POCO.Mapper.Common
     {
         public object Map(object toConvert, Type targetType)
         {
+            if (toConvert is null)
+                return toConvert;
             object _output = Activator.CreateInstance(targetType);
             foreach (PropertyInfo _convertProp in toConvert.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {

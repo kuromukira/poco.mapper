@@ -68,6 +68,13 @@ namespace POCO.Mapper.Test
         public IList<InnerSourceModel> InnerSourceList { get; set; }
         [MappedTo("OUTER_ARRAY")]
         public InnerSourceModel[] InnerSourceArray { get; set; }
+
+        [MappedTo("NULL_OUTER")]
+        public InnerSourceModel JustNullInner { get; set; }
+        [MappedTo("NULL_OUTER_LIST")]
+        public IList<InnerSourceModel> JustNullInnerList { get; set; }
+        [MappedTo("NULL_OUTER_ARRAY")]
+        public InnerSourceModel[] JustNullInnerArray { get; set; }
     }
 
     internal class InnerSourceModel
@@ -113,6 +120,10 @@ namespace POCO.Mapper.Test
         public InnerTargetModel OUTER { get; set; }
         public IList<InnerTargetModel> OUTER_LIST { get; set; }
         public InnerTargetModel[] OUTER_ARRAY { get; set; }
+
+        public InnerTargetModel NULL_OUTER { get; set; }
+        public IList<InnerTargetModel> NULL_OUTER_LIST { get; set; }
+        public InnerTargetModel[] NULL_OUTER_ARRAY { get; set; }
     }
 
     internal class InnerTargetModel
