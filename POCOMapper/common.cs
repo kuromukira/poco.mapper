@@ -111,10 +111,7 @@ namespace POCO.Mapper.Common
             }
             return _output;
 
-            bool isCustomType(Type outputType)
-            {
-                return (!outputType.IsPrimitive && outputType.IsClass && !outputType.IsAbstract && outputType != typeof(string));
-            }
+            bool isCustomType(Type outputType) => (!outputType.IsPrimitive && outputType.IsClass && !outputType.IsAbstract && outputType != typeof(string));
 
             bool isGuidMapping(Type sourceType, Type converType) => ((sourceType == typeof(string) && converType == typeof(Guid)) ||
                     (converType == typeof(string) && sourceType == typeof(Guid)));

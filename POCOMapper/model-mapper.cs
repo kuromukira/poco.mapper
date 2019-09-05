@@ -49,15 +49,9 @@ namespace POCO.Mapper
     {
         readonly ModelMapperCommon Common = new ModelMapperCommon();
 
-        T IMapper<T, S>.from(S source)
-        {
-            return (T)Common.Map(source, typeof(T));
-        }
+        T IMapper<T, S>.from(S source) => (T)Common.Map(source, typeof(T));
 
-        S IMapper<T, S>.from(T target)
-        {
-            return (S)Common.Map(target, typeof(S));
-        }
+        S IMapper<T, S>.from(T target) => (S)Common.Map(target, typeof(S));
 
         IList<T> IMapper<T, S>.from(IList<S> source)
         {
