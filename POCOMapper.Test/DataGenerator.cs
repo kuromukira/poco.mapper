@@ -15,6 +15,10 @@ namespace POCO.Mapper.Test
     {
         [MappedTo("GUID")]
         public Guid Id { get; set; }
+        [MappedTo("GUID_STRING")]
+        public Guid ToStringValue { get; set; }
+        [MappedTo("STRING_GUID")]
+        public string ToGuidValue { get; set; }
         [MappedTo("STRING")]
         public string Name { get; set; }
         [MappedTo("CHAR")]
@@ -90,6 +94,8 @@ namespace POCO.Mapper.Test
     internal class TargetModel
     {
         public Guid GUID { get; set; }
+        public string GUID_STRING { get; set; }
+        public Guid STRING_GUID { get; set; }
         public string STRING { get; set; }
         public char CHAR { get; set; }
         public int INT { get; set; }
@@ -195,6 +201,8 @@ namespace POCO.Mapper.Test
             return new SourceModel
             {
                 Id = Guid.NewGuid(),
+                ToGuidValue = Guid.NewGuid().ToString(),
+                ToStringValue = Guid.NewGuid(),
                 Name = ValueGenerator.Word(),
                 Character = ValueGenerator.Character(),
                 Number = ValueGenerator.Number(),

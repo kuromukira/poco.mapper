@@ -14,18 +14,18 @@
       <RepositoryType>Git</RepositoryType>
       <Authors>Nor Gelera</Authors>
       <Product>POCO.Mapper</Product>
-      <Version>2.1.1</Version>
-      <PackageReleaseNotes>- Fix issue with null objects during mapping from source to target and vice versa</PackageReleaseNotes>
-      <AssemblyVersion>2.1.0.0</AssemblyVersion>
-      <FileVersion>2.1.0.0</FileVersion>
+      <Version>2.2.0</Version>
+      <PackageReleaseNotes>- Added mapping from GUID to STRING and vice versa if the source property is a GUID and the target property is a STRING or vice versa</PackageReleaseNotes>
+      <AssemblyVersion>2.2.0.0</AssemblyVersion>
+      <FileVersion>2.2.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>E:\DEV\POCOMapper\POCOMapper\POCOMapper.xml</DocumentationFile>
+    <DocumentationFile>..\POCOMapper\POCOMapper.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>E:\DEV\POCOMapper\POCOMapper\POCOMapper.xml</DocumentationFile>
+    <DocumentationFile>..\POCOMapper\POCOMapper.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
