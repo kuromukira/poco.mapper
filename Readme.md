@@ -3,7 +3,11 @@ An alternative "Plain Old C# Objects" mapper with minimal configuration required
 
 POCO stands for "Plain Old C# Object" or "Plain Old CLR Object", depending on who you ask. This library is a custom mapper for POCOs (map values of identical properties from one POCO to another POCO). Minimal configuration is needed.
 
-<img alt="Azure DevOps builds (branch)" src="https://img.shields.io/azure-devops/build/norgelera/dabf89f6-646a-4c51-ac54-7349811a3405/6/master.svg">
+<div>
+    <img alt="Azure DevOps builds (branch)" src="https://img.shields.io/azure-devops/build/norgelera/dabf89f6-646a-4c51-ac54-7349811a3405/6/master.svg">
+    <img alt="Nuget" src="https://img.shields.io/nuget/dt/POCOMapper">
+    <img alt="Nuget" src="https://img.shields.io/nuget/v/POCOMapper">
+</div>
 
 # How-To
 
