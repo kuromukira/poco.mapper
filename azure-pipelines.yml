@@ -10,6 +10,11 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+# Restore dependencies
+- script: |
+    dotnet restore
+  displayName: 'Restore dependencies'
+  
 # Build source, tests and run tests with coverage
 - script: |
     dotnet test ./POCOMapper.Test/POCOMapper.Test.csproj -c Debug --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
@@ -17,5 +22,5 @@ steps:
 
 # Upload coverage to codecov.io
 - script: |
-    %USERPROFILE%\.nuget\packages\codecov\1.1.0\tools\codecov.exe -f "./POCOMapper.Test/TestResults/coverage.opencover.xml" -t $(CODECOV_TOKEN)
+    %USERPROFILE%\.nuget\packages\codecov\1.9.0\tools\codecov.exe -f "./POCOMapper.Test/POCOMapper.Test/coverage.opencover.xml" -t $(CODECOV_TOKEN)
   displayName: Upload coverage to codecov.io
