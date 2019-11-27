@@ -29,4 +29,4 @@ steps:
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(Build.SourceDirectory)/POCOMapper.Test/*.xml'
+    summaryFileLocation: '$(Build.SourceDirectory)/POCOMapper.Test/coverage.cobertura.xml'
