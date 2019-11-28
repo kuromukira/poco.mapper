@@ -15,12 +15,15 @@ steps:
 
 # Build project
 - script: |
-    dotnet build --configuration $(buildConfiguration)
+    dotnet build --configuration $(
   displayName: 'Build $(buildConfiguration)'
 
 # Execute unit tests with coverage-
-- script: dotnet test $(Build.SourceDirectory)/POCOMapper.Test/POCOMapper.Test.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
-  displayName: 'Test with coverage'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: 'POCOMapper.Test/POCOMapper.Test.csproj'
+    arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
 
 # Publish coverage results
 - task: PublishCodeCoverageResults@1
