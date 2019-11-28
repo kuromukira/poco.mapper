@@ -15,11 +15,12 @@ steps:
 
 # Build project
 - script: |
-    dotnet build --configuration $(
+    dotnet build --configuration $(buildConfiguration)
   displayName: 'Build $(buildConfiguration)'
 
 # Execute unit tests with coverage-
 - task: DotNetCoreCLI@2
+  displayName: 'Test with coverage'
   inputs:
     command: 'test'
     projects: 'POCOMapper.Test/POCOMapper.Test.csproj'
