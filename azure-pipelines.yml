@@ -2,7 +2,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'windows-2019'
+  vmImage: 'vs2017-win2016'
 
 variables:
   buildConfiguration: 'Release'
@@ -14,21 +14,29 @@ steps:
   displayName: 'Restore dependencies'
 
 # Build project
-- script: |
-    dotnet build --configuration $(buildConfiguration)
+- script: dotnet build --configuration $(buildConfiguration)
   displayName: 'Build $(buildConfiguration)'
 
-# Execute unit tests with coverage-
-- task: DotNetCoreCLI@2
+# Execute unit tests with coverage
+- script: |
+    mkdir $(Build.SourcesDirectory)\results
+    dotnet test --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura  POCOMapper.Test
+    copy $(Build.SourcesDirectory)\POCOMapper.Test\coverage.cobertura.xml $(Build.SourcesDirectory)\results
+    dotnet tool install dotnet-reportgenerator-globaltool --tool-path . --version 4.0.0-rc4
+    .\reportgenerator "-reports:$(Build.SourcesDirectory)\POCOMapper.Test\coverage.cobertura.xml" "-targetdir:results" "-reporttypes:HTMLInline;HTMLChart"
   displayName: 'Test with coverage'
+
+# Publish test results
+- task: PublishTestResults@2
+  displayName: 'Publist test results'
   inputs:
-    command: 'test'
-    projects: 'POCOMapper.Test/POCOMapper.Test.csproj'
-    arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
 
 # Publish coverage results
 - task: PublishCodeCoverageResults@1
-  displayName: 'Publish test coverage'
+  displayName: 'Publish code coverage'
   inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(Build.SourceDirectory)/**/coverage.cobertura.xml'
+    summaryFileLocation: $(Build.SourcesDirectory)\results\coverage.cobertura.xml
+    reportDirectory: $(Build.SourcesDirectory)\results
+    codecoverageTool: cobertura
