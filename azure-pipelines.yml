@@ -19,7 +19,7 @@ steps:
   displayName: 'Build $(buildConfiguration)'
 
 # Execute unit tests with coverage-
-- script: dotnet test $(Build.SourceDirectory)/**/POCOMapper.Test.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+- script: dotnet test $(Build.SourceDirectory)/POCOMapper.Test/POCOMapper.Test.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
   displayName: 'Test with coverage'
 
 # Publish coverage results
