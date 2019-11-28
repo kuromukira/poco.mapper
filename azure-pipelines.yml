@@ -23,10 +23,10 @@ steps:
   inputs:
     command: 'test'
     projects: 'POCOMapper.Test/*.Test.csproj'
-    arguments: --configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura --collect "Code Coverage"
+    arguments: --configuration $(buildConfiguration) --collect:"Code Coverage"
 
 # Publish coverage results
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(Build.SourceDirectory)/POCOMapper.Test/coverage.cobertura.xml'
+    summaryFileLocation: '$(Build.SourceDirectory)/POCOMapper.Test/*.xml'
