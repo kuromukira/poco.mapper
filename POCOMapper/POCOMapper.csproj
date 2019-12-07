@@ -8,16 +8,16 @@
       <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
       <Description>An alternative "Plain Old C# Objects" mapper with minimal configuration required.</Description>
       <Copyright>Nor Gelera 2019</Copyright>
-      <PackageProjectUrl>https://github.com/norgelera/poco.mapper</PackageProjectUrl>
+      <PackageProjectUrl>https://kuromukira.github.io/poco.mapper/</PackageProjectUrl>
       <RepositoryUrl>https://github.com/norgelera/poco.mapper</RepositoryUrl>
-      <PackageTags>poco mapper entity class equals</PackageTags>
+      <PackageTags>poco mapper mapping entity class equals</PackageTags>
       <RepositoryType>Git</RepositoryType>
       <Authors>Nor Gelera</Authors>
       <Product>POCO.Mapper</Product>
-      <Version>2.2.0</Version>
-      <PackageReleaseNotes>- Added mapping from GUID to STRING and vice versa if the source property is a GUID and the target property is a STRING or vice versa</PackageReleaseNotes>
-      <AssemblyVersion>2.2.0.0</AssemblyVersion>
-      <FileVersion>2.2.0.0</FileVersion>
+      <Version>2.2.1</Version>
+      <PackageReleaseNotes>- Make ModelMap implement IDisposable</PackageReleaseNotes>
+      <AssemblyVersion>2.2.1.0</AssemblyVersion>
+      <FileVersion>2.2.1.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

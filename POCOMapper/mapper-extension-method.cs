@@ -1,11 +1,33 @@
 ﻿using POCO.Mapper.Common;
 using System.Collections.Generic;
+using System;
 using System.Linq;
 
 namespace POCO.Mapper.Extension
 {
     /// <summary>Inherit from this class to use extensions</summary>
-    public abstract class ModelMap { }
+    public abstract class ModelMap : IDisposable
+    {
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        /// <summary></summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                disposedValue = true;
+            }
+        }
+
+        /// <summary></summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
+    }
 
     /// <summary>Model Mapper Extension Methods</summary>
     public static class POCOMapperExtensions

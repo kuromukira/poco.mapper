@@ -7,6 +7,12 @@
         <member name="T:POCO.Mapper.Extension.ModelMap">
             <summary>Inherit from this class to use extensions</summary>
         </member>
+        <member name="M:POCO.Mapper.Extension.ModelMap.Dispose(System.Boolean)">
+            <summary></summary>
+        </member>
+        <member name="M:POCO.Mapper.Extension.ModelMap.Dispose">
+            <summary></summary>
+        </member>
         <member name="T:POCO.Mapper.Extension.POCOMapperExtensions">
             <summary>Model Mapper Extension Methods</summary>
         </member>
