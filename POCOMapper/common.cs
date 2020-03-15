@@ -11,109 +11,109 @@ namespace POCO.Mapper.Common
         public object Map(object toConvert, Type targetType)
         {
             if (toConvert is null)
-                return toConvert;
-            object _output = Activator.CreateInstance(targetType);
-            foreach (PropertyInfo _convertProp in toConvert.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                return null;
+            object output = Activator.CreateInstance(targetType);
+            foreach (PropertyInfo convertProp in toConvert.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 // * Get custom attribute name
-                var _mappedTo = _convertProp.GetCustomAttributes(typeof(MappedTo), true);
-                MappedTo[] _mappedToName = ((MappedTo[])(_mappedTo ?? new MappedTo[] { }));
-                foreach (MappedTo _mappedName in _mappedToName)
+                object[] mappedTo = convertProp.GetCustomAttributes(typeof(MappedTo), true);
+                MappedTo[] mappedToName = ((MappedTo[])(mappedTo ?? new MappedTo[] { }));
+                foreach (MappedTo mappedName in mappedToName)
                 {
                     // * Loop only through all properties that matched the target mapped name
-                    foreach (PropertyInfo _outputProp in _output.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(prop => prop.Name.Equals(_mappedName.Name)).ToList())
+                    foreach (PropertyInfo outputProp in output.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(prop => prop.Name.Equals(mappedName.Name)).ToList())
                     {
                         // * Validation for type mismatch except for collections
-                        if (!_outputProp.PropertyType.IsAssignableFrom(_convertProp.PropertyType)
-                            && !isGuidMapping(_convertProp.PropertyType, _outputProp.PropertyType)
-                            && !isCustomType(_outputProp.PropertyType)
-                            && !typeof(IEnumerable).IsAssignableFrom(_outputProp.PropertyType))
-                            throw new IMapperException(string.Format("The source type ({0}) could not be converted to the target type ({1}).", _convertProp.PropertyType.Name, _outputProp.PropertyType.Name));
+                        if (!outputProp.PropertyType.IsAssignableFrom(convertProp.PropertyType)
+                            && !IsGuidMapping(convertProp.PropertyType, outputProp.PropertyType)
+                            && !IsCustomType(outputProp.PropertyType)
+                            && !typeof(IEnumerable).IsAssignableFrom(outputProp.PropertyType))
+                            throw new IMapperException($"The source type ({convertProp.PropertyType.Name}) could not be converted to the target type ({outputProp.PropertyType.Name}).");
 
                         // * Check if Guid to String mapping or vice versa
-                        else if (isGuidMapping(_convertProp.PropertyType, _outputProp.PropertyType))
+                        else if (IsGuidMapping(convertProp.PropertyType, outputProp.PropertyType))
                         {
                             // * Check source if Guid then convert to string
-                            if (_convertProp.PropertyType == typeof(Guid) && _outputProp.PropertyType == typeof(string))
+                            if (convertProp.PropertyType == typeof(Guid) && outputProp.PropertyType == typeof(string))
                             {
-                                Guid _sourceValue = (Guid)_convertProp.GetValue(toConvert);
-                                _outputProp.SetValue(_output, _sourceValue == Guid.Empty ? string.Empty : _sourceValue.ToString());
+                                Guid sourceValue = (Guid)convertProp.GetValue(toConvert);
+                                outputProp.SetValue(output, sourceValue == Guid.Empty ? string.Empty : sourceValue.ToString());
                             }
                             // * Check source if string then  convert to Guid
-                            else if (_convertProp.PropertyType == typeof(string) && _outputProp.PropertyType == typeof(Guid))
+                            else if (convertProp.PropertyType == typeof(string) && outputProp.PropertyType == typeof(Guid))
                             {
-                                string _sourceValue = _convertProp.GetValue(toConvert)?.ToString() ?? string.Empty;
-                                Guid.TryParse(_sourceValue, out Guid _guidValue);
-                                _outputProp.SetValue(_output, _guidValue);
+                                string sourceValue = convertProp.GetValue(toConvert)?.ToString() ?? string.Empty;
+                                Guid.TryParse(sourceValue, out Guid guidValue);
+                                outputProp.SetValue(output, guidValue);
                             }
                         }
 
                         // * Check if Enum
-                        else if (_outputProp.PropertyType.IsEnum)
-                            _outputProp.SetValue(_output, Enum.ToObject(_outputProp.PropertyType, _convertProp.GetValue(toConvert)));
+                        else if (outputProp.PropertyType.IsEnum)
+                            outputProp.SetValue(output, Enum.ToObject(outputProp.PropertyType, convertProp.GetValue(toConvert)));
 
                         // * Check if IEnumerable (eg IList, List and Arrays)
-                        else if (_outputProp.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(_outputProp.PropertyType))
+                        else if (outputProp.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(outputProp.PropertyType))
                         {
-                            var _collection = (IEnumerable)_convertProp.GetValue(toConvert, null);
-                            if (!(_collection is null))
+                            IEnumerable collection = (IEnumerable)convertProp.GetValue(toConvert, null);
+                            if (!(collection is null))
                             {
                                 // * Define and check the target output list
-                                var _constructedListType = typeof(List<>).MakeGenericType(
-                                    !_outputProp.PropertyType.IsArray ?
-                                    _outputProp.PropertyType.GetGenericArguments()[0] :
-                                    _outputProp.PropertyType.GetElementType()
+                                Type constructedListType = typeof(List<>).MakeGenericType(
+                                    !outputProp.PropertyType.IsArray ?
+                                    outputProp.PropertyType.GetGenericArguments()[0] :
+                                    outputProp.PropertyType.GetElementType()
                                 );
-                                if (_constructedListType is null)
-                                    throw new IMapperException("POCO.Mapper encountered an error with " + _outputProp.PropertyType.Name);
-                                var _finalList = (IList)Activator.CreateInstance(_constructedListType);
-                                bool isInnerElementCustom = !_outputProp.PropertyType.IsArray ?
-                                    isCustomType(_outputProp.PropertyType.GetGenericArguments()[0]) :
-                                    isCustomType(_outputProp.PropertyType.GetElementType());
+                                if (constructedListType is null)
+                                    throw new IMapperException("POCO.Mapper encountered an error with " + outputProp.PropertyType.Name);
+                                IList finalList = (IList)Activator.CreateInstance(constructedListType);
+                                bool isInnerElementCustom = !outputProp.PropertyType.IsArray ?
+                                    IsCustomType(outputProp.PropertyType.GetGenericArguments()[0]) :
+                                    IsCustomType(outputProp.PropertyType.GetElementType());
 
                                 // * Loop through the objects to be mapped
-                                foreach (object _obj in _collection)
+                                foreach (object obj in collection)
                                 {
                                     // * For custom types
                                     if (isInnerElementCustom)
                                     {
                                         // * Call method again to map list objects
-                                        object _result = Map(_obj, !_outputProp.PropertyType.IsArray ?
-                                            _outputProp.PropertyType.GetGenericArguments()[0] : _outputProp.PropertyType.GetElementType()
+                                        object result = Map(obj, !outputProp.PropertyType.IsArray ?
+                                            outputProp.PropertyType.GetGenericArguments()[0] : outputProp.PropertyType.GetElementType()
                                         );
-                                        _finalList.Add(_result);
+                                        finalList.Add(result);
                                     }
                                     // * For native types
-                                    else _finalList.Add(_obj);
+                                    else finalList.Add(obj);
                                 }
 
                                 // * Assign to target property
-                                if (_outputProp.PropertyType.IsArray)
+                                if (outputProp.PropertyType.IsArray)
                                 {
-                                    var _arrayList = Array.CreateInstance(_outputProp.PropertyType.GetElementType(), _finalList.Count);
-                                    for (int i = 0; i < _finalList.Count; i++)
-                                        _arrayList.SetValue(Convert.ChangeType(_finalList[i], _outputProp.PropertyType.GetElementType()), i);
-                                    _outputProp.SetValue(_output, _arrayList);
+                                    Array arrayList = Array.CreateInstance(outputProp.PropertyType.GetElementType(), finalList.Count);
+                                    for (int i = 0; i < finalList.Count; i++)
+                                        arrayList.SetValue(Convert.ChangeType(finalList[i], outputProp.PropertyType.GetElementType()), i);
+                                    outputProp.SetValue(output, arrayList);
                                 }
-                                else _outputProp.SetValue(_output, _finalList);
+                                else outputProp.SetValue(output, finalList);
                             }
                         }
 
                         // * Check if a custom type
-                        else if (isCustomType(_outputProp.PropertyType))
-                            _outputProp.SetValue(_output, Map(_convertProp.GetValue(toConvert), _outputProp.PropertyType));
+                        else if (IsCustomType(outputProp.PropertyType))
+                            outputProp.SetValue(output, Map(convertProp.GetValue(toConvert), outputProp.PropertyType));
 
                         // * Default
-                        else _outputProp.SetValue(_output, _convertProp.GetValue(toConvert));
+                        else outputProp.SetValue(output, convertProp.GetValue(toConvert));
                         break;
                     }
                 }
             }
-            return _output;
+            return output;
 
-            bool isCustomType(Type outputType) => (!outputType.IsPrimitive && outputType.IsClass && !outputType.IsAbstract && outputType != typeof(string));
+            bool IsCustomType(Type outputType) => (!outputType.IsPrimitive && outputType.IsClass && !outputType.IsAbstract && outputType != typeof(string));
 
-            bool isGuidMapping(Type sourceType, Type converType) => ((sourceType == typeof(string) && converType == typeof(Guid)) ||
+            bool IsGuidMapping(Type sourceType, Type converType) => ((sourceType == typeof(string) && converType == typeof(Guid)) ||
                     (converType == typeof(string) && sourceType == typeof(Guid)));
         }
     }

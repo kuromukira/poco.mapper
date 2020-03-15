@@ -161,29 +161,28 @@ namespace POCO.Mapper.Test
 
     static class ValueGenerator
     {
-        private readonly static Random _random = new Random();
+        private static readonly Random Random = new Random();
 
-        internal static int RandomNumber() => _random.Next(1, 50);
+        internal static int RandomNumber() => Random.Next(1, 50);
 
-        internal static int Number(int max = 9) => _random.Next(0, max);
+        internal static int Number(int max = 9) => Random.Next(0, max);
 
         internal static string Word()
         {
-            int _size = _random.Next(3, 5);
-            StringBuilder _builder = new StringBuilder(string.Empty);
-            for (int i = 0; i < _size; i++)
-                _builder.Append((char)_random.Next(65, 90));
-            return _builder.ToString();
+            int size = Random.Next(3, 5);
+            StringBuilder builder = new StringBuilder(string.Empty);
+            for (int i = 0; i < size; i++)
+                builder.Append((char)Random.Next(65, 90));
+            return builder.ToString();
         }
 
-        internal static char Character() => (char)_random.Next(65, 90);
+        internal static char Character() => (char)Random.Next(65, 90);
     }
 
     internal class DataGenerator
     {
-        internal InnerSourceModel GenerateInnerSource()
-        {
-            return new InnerSourceModel
+        private InnerSourceModel GenerateInnerSource() =>
+            new InnerSourceModel
             {
                 Object = ValueGenerator.Word(),
                 ObjectArray = new List<object> { ValueGenerator.Word(),
@@ -193,11 +192,10 @@ namespace POCO.Mapper.Test
                     ValueGenerator.Number(),
                     ValueGenerator.Character() }
             };
-        }
 
-        internal SourceModel GenerateSourceModel()
+        private SourceModel GenerateSourceModel()
         {
-            int _listSize = ValueGenerator.RandomNumber();
+            int listSize = ValueGenerator.RandomNumber();
             return new SourceModel
             {
                 Id = Guid.NewGuid(),
@@ -212,39 +210,38 @@ namespace POCO.Mapper.Test
                 Percentage = ValueGenerator.Number(100),
                 State = CommonModel.DataState.New,
 
-                NameArray = Enumerable.Range(1, _listSize).Select(i => ValueGenerator.Word()).ToArray(),
-                NameList = Enumerable.Range(1, _listSize).Select(i => ValueGenerator.Word()).ToList(),
+                NameArray = Enumerable.Range(1, listSize).Select(i => ValueGenerator.Word()).ToArray(),
+                NameList = Enumerable.Range(1, listSize).Select(i => ValueGenerator.Word()).ToList(),
 
-                NumberArray = Enumerable.Range(1, _listSize).Select(i => ValueGenerator.Number()).ToArray(),
-                NumberList = Enumerable.Range(1, _listSize).Select(i => ValueGenerator.Number()).ToList(),
+                NumberArray = Enumerable.Range(1, listSize).Select(i => ValueGenerator.Number()).ToArray(),
+                NumberList = Enumerable.Range(1, listSize).Select(i => ValueGenerator.Number()).ToList(),
 
-                LongArray = Enumerable.Range(1, _listSize).Select(i => (long)ValueGenerator.Number()).ToArray(),
-                LongList = Enumerable.Range(1, _listSize).Select(i => (long)ValueGenerator.Number()).ToList(),
+                LongArray = Enumerable.Range(1, listSize).Select(i => (long)ValueGenerator.Number()).ToArray(),
+                LongList = Enumerable.Range(1, listSize).Select(i => (long)ValueGenerator.Number()).ToList(),
 
-                DecimalArray = Enumerable.Range(1, _listSize).Select(i => (decimal)ValueGenerator.Number()).ToArray(),
-                DecimalList = Enumerable.Range(1, _listSize).Select(i => (decimal)ValueGenerator.Number()).ToList(),
+                DecimalArray = Enumerable.Range(1, listSize).Select(i => (decimal)ValueGenerator.Number()).ToArray(),
+                DecimalList = Enumerable.Range(1, listSize).Select(i => (decimal)ValueGenerator.Number()).ToList(),
 
-                DoubleArray = Enumerable.Range(1, _listSize).Select(i => (double)ValueGenerator.Number()).ToArray(),
-                DoubleList = Enumerable.Range(1, _listSize).Select(i => (double)ValueGenerator.Number()).ToList(),
+                DoubleArray = Enumerable.Range(1, listSize).Select(i => (double)ValueGenerator.Number()).ToArray(),
+                DoubleList = Enumerable.Range(1, listSize).Select(i => (double)ValueGenerator.Number()).ToList(),
 
-                FloatArray = Enumerable.Range(1, _listSize).Select(i => (float)ValueGenerator.Number()).ToArray(),
-                FloatList = Enumerable.Range(1, _listSize).Select(i => (float)ValueGenerator.Number()).ToList(),
+                FloatArray = Enumerable.Range(1, listSize).Select(i => (float)ValueGenerator.Number()).ToArray(),
+                FloatList = Enumerable.Range(1, listSize).Select(i => (float)ValueGenerator.Number()).ToList(),
 
                 InnerSource = GenerateInnerSource(),
-                InnerSourceArray = Enumerable.Range(1, _listSize).Select(i => GenerateInnerSource()).ToArray(),
-                InnerSourceList = Enumerable.Range(1, _listSize).Select(i => GenerateInnerSource()).ToList()
+                InnerSourceArray = Enumerable.Range(1, listSize).Select(i => GenerateInnerSource()).ToArray(),
+                InnerSourceList = Enumerable.Range(1, listSize).Select(i => GenerateInnerSource()).ToList()
             };
         }
 
         internal IList<SourceModel> GenerateSourceModels(int limit) => Enumerable.Range(1, limit).Select(i => GenerateSourceModel()).ToList();
-        internal MultipleMapSourceModel GenerateMultiFieldSourceModel()
-        {
-            return new MultipleMapSourceModel
+
+        public MultipleMapSourceModel GenerateMultiFieldSourceModel() =>
+            new MultipleMapSourceModel
             {
                 Number = ValueGenerator.Number(),
                 Text = ValueGenerator.Word()
             };
-        }
 
         internal IList<MultipleMapSourceModel> GenerateMultiFieldSourceModels(int limit) => Enumerable.Range(1, limit).Select(i => GenerateMultiFieldSourceModel()).ToList();
     }
