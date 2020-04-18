@@ -136,11 +136,11 @@ Install the following to get started
 1. [Visual Studio Code](https://code.visualstudio.com/) 
 2. [Visual Studio Community](https://visualstudio.microsoft.com/downloads/)
 
-**Exntesions**
+**Extensions**
 1. [C# Language Extension for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
 
 **Frameworks**
-1. [.NET](https://www.microsoft.com/net/download)
+1. [.NET Core](https://www.microsoft.com/net/download)
 
 
 Do you want to contribute? Send me an email or DM me in [twitter](https://www.twitter.com/norgelera).
