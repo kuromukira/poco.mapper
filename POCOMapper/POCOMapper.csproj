@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageVersion>2.3.0</PackageVersion>
+    <LangVersion>8</LangVersion>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -15,9 +18,10 @@
       <Authors>Nor Gelera</Authors>
       <Product>POCO.Mapper</Product>
       <Version>2.2.1</Version>
-      <PackageReleaseNotes>- Make ModelMap implement IDisposable</PackageReleaseNotes>
-      <AssemblyVersion>2.2.1.0</AssemblyVersion>
-      <FileVersion>2.2.1.0</FileVersion>
+      <PackageReleaseNotes>- Add string format attribute when mapping other types to string.
+- Breaking: Rename methods used in IMapper interface</PackageReleaseNotes>
+      <AssemblyVersion>2.3.0.0</AssemblyVersion>
+      <FileVersion>2.3.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

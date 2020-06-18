@@ -11,20 +11,41 @@ namespace POCO.Mapper
     {
         /// <summary></summary>
         public string Name { get; }
+
         /// <summary>Map to field</summary>
         /// <param name="name">Field Name</param>
         public MappedTo(string name) => Name = name;
+    }
+
+    /// <summary>String formatting</summary>
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public class UseFormat : Attribute
+    {
+        /// <summary></summary>
+        public string Format { get; }
+
+        /// <summary>Format to be used when mapping to a string</summary>
+        /// <param name="format">String format</param>
+        public UseFormat(string format) => Format = format;
     }
 
     /// <summary></summary>
     public class IMapperException : Exception
     {
         /// <summary></summary>
-        public IMapperException() { }
+        public IMapperException()
+        {
+        }
+
         /// <summary></summary>
-        public IMapperException(string message) : base(message) { }
+        public IMapperException(string message) : base(message)
+        {
+        }
+
         /// <summary></summary>
-        public IMapperException(string message, Exception inner) : base(message, inner) { }
+        public IMapperException(string message, Exception inner) : base(message, inner)
+        {
+        }
     }
 
     ///<summary>Map values from S to T and/or vice versa</summary>
@@ -33,13 +54,16 @@ namespace POCO.Mapper
     public interface IMapper<T, S>
     {
         ///<summary>Map values from S to T</summary>
-        T from(S source);
+        T From(S source);
+
         ///<summary>Map values from T to S</summary>
-        S from(T target);
+        S From(T target);
+
         ///<summary>Map list from S to T</summary>
-        IList<T> from(IList<S> source);
+        IList<T> From(IList<S> source);
+
         ///<summary>Map list from T to S</summary>
-        IList<S> from(IList<T> target);
+        IList<S> From(IList<T> target);
     }
 
     ///<summary>Map values from S to T and/or vice versa</summary>
@@ -49,29 +73,29 @@ namespace POCO.Mapper
     {
         readonly ModelMapperCommon Common = new ModelMapperCommon();
 
-        T IMapper<T, S>.from(S source) => (T)Common.Map(source, typeof(T));
+        T IMapper<T, S>.From(S source) => (T) Common.Map(source, typeof(T));
 
-        S IMapper<T, S>.from(T target) => (S)Common.Map(target, typeof(S));
+        S IMapper<T, S>.From(T target) => (S) Common.Map(target, typeof(S));
 
-        IList<T> IMapper<T, S>.from(IList<S> source)
+        IList<T> IMapper<T, S>.From(IList<S> source)
         {
             if (!source.Any())
                 return new List<T>();
             else
             {
-                IMapper<T, S> _mapper = new ModelMapper<T, S>();
-                return source.Select(_b => _mapper.from(_b)).ToList();
+                IMapper<T, S> mapper = new ModelMapper<T, S>();
+                return source.Select(s => mapper.From(s)).ToList();
             }
         }
 
-        IList<S> IMapper<T, S>.from(IList<T> target)
+        IList<S> IMapper<T, S>.From(IList<T> target)
         {
             if (!target.Any())
                 return new List<S>();
             else
             {
-                IMapper<T, S> _mapper = new ModelMapper<T, S>();
-                return target.Select(_b => _mapper.from(_b)).ToList();
+                IMapper<T, S> mapper = new ModelMapper<T, S>();
+                return target.Select(t => mapper.From(t)).ToList();
             }
         }
     }
