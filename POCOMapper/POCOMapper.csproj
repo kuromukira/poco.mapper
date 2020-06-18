@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-      <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+      <PackageLicenseFile>LICENSE</PackageLicenseFile>
       <Description>An alternative "Plain Old C# Objects" mapper with minimal configuration required.</Description>
       <Copyright>Nor Gelera 2019</Copyright>
       <PackageProjectUrl>https://kuromukira.github.io/poco.mapper/</PackageProjectUrl>
