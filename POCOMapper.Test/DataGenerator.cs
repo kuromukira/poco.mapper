@@ -8,87 +8,60 @@ namespace POCO.Mapper.Test
 {
     internal class CommonModel
     {
-        public enum DataState { New, Updated, Removed }
+        public enum DataState
+        {
+            New,
+            Updated,
+            Removed
+        }
     }
 
     internal class SourceModel : ModelMap
     {
-        [MappedTo("GUID")]
-        public Guid Id { get; set; }
-        [MappedTo("GUID_STRING")]
-        public Guid ToStringValue { get; set; }
-        [MappedTo("STRING_GUID")]
-        public string ToGuidValue { get; set; }
-        [MappedTo("STRING")]
-        public string Name { get; set; }
-        [MappedTo("CHAR")]
-        public char Character { get; set; }
-        [MappedTo("INT")]
-        public int Number { get; set; }
-        [MappedTo("LONG")]
-        public long LongNumber { get; set; }
-        [MappedTo("DECIMAL")]
-        public decimal Money { get; set; }
-        [MappedTo("DOUBLE")]
-        public double Currency { get; set; }
-        [MappedTo("FLOAT")]
-        public float Percentage { get; set; }
-        [MappedTo("ENUM")]
-        public CommonModel.DataState State { get; set; } = CommonModel.DataState.New;
+        [MappedTo("GUID")] public Guid Id { get; set; }
+        [MappedTo("GUID_STRING")] public Guid ToStringValue { get; set; }
+        [MappedTo("STRING_GUID")] public string ToGuidValue { get; set; }
+        [MappedTo("STRING")] public string Name { get; set; }
+        [MappedTo("CHAR")] public char Character { get; set; }
+        [MappedTo("INT")] public int Number { get; set; }
+        [MappedTo("LONG")] public long LongNumber { get; set; }
+        [MappedTo("DECIMAL")] public decimal Money { get; set; }
+        [MappedTo("DOUBLE")] public double Currency { get; set; }
+        [MappedTo("FLOAT")] public float Percentage { get; set; }
+        [MappedTo("ENUM")] public CommonModel.DataState State { get; set; } = CommonModel.DataState.New;
 
-        [MappedTo("STRING_ARRAY")]
-        public string[] NameArray { get; set; }
-        [MappedTo("STRIN_LIST")]
-        public IList<string> NameList { get; set; }
+        [MappedTo("STRING_ARRAY")] public string[] NameArray { get; set; }
+        [MappedTo("STRIN_LIST")] public IList<string> NameList { get; set; }
 
-        [MappedTo("INT_ARRAY")]
-        public int[] NumberArray { get; set; }
-        [MappedTo("INT_LIST")]
-        public IList<int> NumberList { get; set; }
+        [MappedTo("INT_ARRAY")] public int[] NumberArray { get; set; }
+        [MappedTo("INT_LIST")] public IList<int> NumberList { get; set; }
 
-        [MappedTo("LONG_ARRAY")]
-        public long[] LongArray { get; set; }
-        [MappedTo("LONG_LIST")]
-        public IList<long> LongList { get; set; }
+        [MappedTo("LONG_ARRAY")] public long[] LongArray { get; set; }
+        [MappedTo("LONG_LIST")] public IList<long> LongList { get; set; }
 
-        [MappedTo("DECIMAL_ARRAY")]
-        public decimal[] DecimalArray { get; set; }
-        [MappedTo("DECIMAL_LIST")]
-        public IList<decimal> DecimalList { get; set; }
+        [MappedTo("DECIMAL_ARRAY")] public decimal[] DecimalArray { get; set; }
+        [MappedTo("DECIMAL_LIST")] public IList<decimal> DecimalList { get; set; }
 
-        [MappedTo("DOUBLE_ARRAY")]
-        public double[] DoubleArray { get; set; }
-        [MappedTo("DOUBLE_LIST")]
-        public IList<double> DoubleList { get; set; }
+        [MappedTo("DOUBLE_ARRAY")] public double[] DoubleArray { get; set; }
+        [MappedTo("DOUBLE_LIST")] public IList<double> DoubleList { get; set; }
 
-        [MappedTo("FLOAT_ARRAY")]
-        public float[] FloatArray { get; set; }
-        [MappedTo("FLOAT_LIST")]
-        public IList<float> FloatList { get; set; }
+        [MappedTo("FLOAT_ARRAY")] public float[] FloatArray { get; set; }
+        [MappedTo("FLOAT_LIST")] public IList<float> FloatList { get; set; }
 
-        [MappedTo("OUTER")]
-        public InnerSourceModel InnerSource { get; set; }
-        [MappedTo("OUTER_LIST")]
-        public IList<InnerSourceModel> InnerSourceList { get; set; }
-        [MappedTo("OUTER_ARRAY")]
-        public InnerSourceModel[] InnerSourceArray { get; set; }
+        [MappedTo("OUTER")] public InnerSourceModel InnerSource { get; set; }
+        [MappedTo("OUTER_LIST")] public IList<InnerSourceModel> InnerSourceList { get; set; }
+        [MappedTo("OUTER_ARRAY")] public InnerSourceModel[] InnerSourceArray { get; set; }
 
-        [MappedTo("NULL_OUTER")]
-        public InnerSourceModel JustNullInner { get; set; }
-        [MappedTo("NULL_OUTER_LIST")]
-        public IList<InnerSourceModel> JustNullInnerList { get; set; }
-        [MappedTo("NULL_OUTER_ARRAY")]
-        public InnerSourceModel[] JustNullInnerArray { get; set; }
+        [MappedTo("NULL_OUTER")] public InnerSourceModel JustNullInner { get; set; }
+        [MappedTo("NULL_OUTER_LIST")] public IList<InnerSourceModel> JustNullInnerList { get; set; }
+        [MappedTo("NULL_OUTER_ARRAY")] public InnerSourceModel[] JustNullInnerArray { get; set; }
     }
 
     internal class InnerSourceModel
     {
-        [MappedTo("OBJECT")]
-        public object Object { get; set; }
-        [MappedTo("OBJECT_ARRAY")]
-        public object[] ObjectArray { get; set; }
-        [MappedTo("OBJECT_LIST")]
-        public IList<object> ObjectList { get; set; }
+        [MappedTo("OBJECT")] public object Object { get; set; }
+        [MappedTo("OBJECT_ARRAY")] public object[] ObjectArray { get; set; }
+        [MappedTo("OBJECT_LIST")] public IList<object> ObjectList { get; set; }
     }
 
     internal class TargetModel
@@ -130,6 +103,10 @@ namespace POCO.Mapper.Test
         public InnerTargetModel NULL_OUTER { get; set; }
         public IList<InnerTargetModel> NULL_OUTER_LIST { get; set; }
         public InnerTargetModel[] NULL_OUTER_ARRAY { get; set; }
+
+        public string DATE_TO_STRING { get; set; }
+        public string INT_TO_STRING { get; set; }
+        public string DECIMAL_TO_STRING { get; set; }
     }
 
     internal class InnerTargetModel
@@ -141,9 +118,7 @@ namespace POCO.Mapper.Test
 
     internal class MultipleMapSourceModel : ModelMap
     {
-        [MappedTo("STR")]
-        [MappedTo("STRING")]
-        public string Text { get; set; }
+        [MappedTo("STR")] [MappedTo("STRING")] public string Text { get; set; }
 
         [MappedTo("INT")]
         [MappedTo("INTEGER")]
@@ -159,24 +134,46 @@ namespace POCO.Mapper.Test
         public int INT { get; set; }
     }
 
+    internal class SourceToString : ModelMap
+    {
+        [MappedTo("DATE_TO_STRING")]
+        [UseFormat("yyyy-MM-dd")]
+        public DateTime DateTimeForString { get; set; }
+
+        [MappedTo("INT_TO_STRING")]
+        [UseFormat("#,###")]
+        public int IntForString { get; set; }
+
+        [MappedTo("DECIMAL_TO_STRING")]
+        [UseFormat("#,###.##")]
+        public decimal DecimalForString { get; set; }
+    }
+
+    internal class TargetToString : ModelMap
+    {
+        public string DATE_TO_STRING { get; set; }
+        public string INT_TO_STRING { get; set; }
+        public string DECIMAL_TO_STRING { get; set; }
+    }
+
     static class ValueGenerator
     {
         private static readonly Random Random = new Random();
 
         internal static int RandomNumber() => Random.Next(1, 50);
 
-        internal static int Number(int max = 9) => Random.Next(0, max);
+        internal static int Number(int min = 1, int max = 9) => Random.Next(min, max);
 
         internal static string Word()
         {
             int size = Random.Next(3, 5);
             StringBuilder builder = new StringBuilder(string.Empty);
             for (int i = 0; i < size; i++)
-                builder.Append((char)Random.Next(65, 90));
+                builder.Append((char) Random.Next(65, 90));
             return builder.ToString();
         }
 
-        internal static char Character() => (char)Random.Next(65, 90);
+        internal static char Character() => (char) Random.Next(65, 90);
     }
 
     internal class DataGenerator
@@ -185,12 +182,18 @@ namespace POCO.Mapper.Test
             new InnerSourceModel
             {
                 Object = ValueGenerator.Word(),
-                ObjectArray = new List<object> { ValueGenerator.Word(),
+                ObjectArray = new List<object>
+                {
+                    ValueGenerator.Word(),
                     ValueGenerator.Number(),
-                    ValueGenerator.Character() }.ToArray(),
-                ObjectList = new List<object> { ValueGenerator.Word(),
+                    ValueGenerator.Character()
+                }.ToArray(),
+                ObjectList = new List<object>
+                {
+                    ValueGenerator.Word(),
                     ValueGenerator.Number(),
-                    ValueGenerator.Character() }
+                    ValueGenerator.Character()
+                }
             };
 
         private SourceModel GenerateSourceModel()
@@ -204,10 +207,10 @@ namespace POCO.Mapper.Test
                 Name = ValueGenerator.Word(),
                 Character = ValueGenerator.Character(),
                 Number = ValueGenerator.Number(),
-                LongNumber = ValueGenerator.Number(1000),
-                Money = ValueGenerator.Number(10000),
-                Currency = ValueGenerator.Number(10000),
-                Percentage = ValueGenerator.Number(100),
+                LongNumber = ValueGenerator.Number(max: 1000),
+                Money = ValueGenerator.Number(max: 10000),
+                Currency = ValueGenerator.Number(max: 10000),
+                Percentage = ValueGenerator.Number(max: 100),
                 State = CommonModel.DataState.New,
 
                 NameArray = Enumerable.Range(1, listSize).Select(i => ValueGenerator.Word()).ToArray(),
@@ -216,17 +219,17 @@ namespace POCO.Mapper.Test
                 NumberArray = Enumerable.Range(1, listSize).Select(i => ValueGenerator.Number()).ToArray(),
                 NumberList = Enumerable.Range(1, listSize).Select(i => ValueGenerator.Number()).ToList(),
 
-                LongArray = Enumerable.Range(1, listSize).Select(i => (long)ValueGenerator.Number()).ToArray(),
-                LongList = Enumerable.Range(1, listSize).Select(i => (long)ValueGenerator.Number()).ToList(),
+                LongArray = Enumerable.Range(1, listSize).Select(i => (long) ValueGenerator.Number()).ToArray(),
+                LongList = Enumerable.Range(1, listSize).Select(i => (long) ValueGenerator.Number()).ToList(),
 
-                DecimalArray = Enumerable.Range(1, listSize).Select(i => (decimal)ValueGenerator.Number()).ToArray(),
-                DecimalList = Enumerable.Range(1, listSize).Select(i => (decimal)ValueGenerator.Number()).ToList(),
+                DecimalArray = Enumerable.Range(1, listSize).Select(i => (decimal) ValueGenerator.Number()).ToArray(),
+                DecimalList = Enumerable.Range(1, listSize).Select(i => (decimal) ValueGenerator.Number()).ToList(),
 
-                DoubleArray = Enumerable.Range(1, listSize).Select(i => (double)ValueGenerator.Number()).ToArray(),
-                DoubleList = Enumerable.Range(1, listSize).Select(i => (double)ValueGenerator.Number()).ToList(),
+                DoubleArray = Enumerable.Range(1, listSize).Select(i => (double) ValueGenerator.Number()).ToArray(),
+                DoubleList = Enumerable.Range(1, listSize).Select(i => (double) ValueGenerator.Number()).ToList(),
 
-                FloatArray = Enumerable.Range(1, listSize).Select(i => (float)ValueGenerator.Number()).ToArray(),
-                FloatList = Enumerable.Range(1, listSize).Select(i => (float)ValueGenerator.Number()).ToList(),
+                FloatArray = Enumerable.Range(1, listSize).Select(i => (float) ValueGenerator.Number()).ToArray(),
+                FloatList = Enumerable.Range(1, listSize).Select(i => (float) ValueGenerator.Number()).ToList(),
 
                 InnerSource = GenerateInnerSource(),
                 InnerSourceArray = Enumerable.Range(1, listSize).Select(i => GenerateInnerSource()).ToArray(),
@@ -244,5 +247,13 @@ namespace POCO.Mapper.Test
             };
 
         internal IList<MultipleMapSourceModel> GenerateMultiFieldSourceModels(int limit) => Enumerable.Range(1, limit).Select(i => GenerateMultiFieldSourceModel()).ToList();
+
+        public SourceToString GenerateSourceToString()
+            => new SourceToString
+            {
+                DecimalForString = Convert.ToDecimal($"{ValueGenerator.Number(min: 1000, max: 9999)}.{ValueGenerator.RandomNumber()}"),
+                IntForString = ValueGenerator.Number(min: 1000, max: 9999),
+                DateTimeForString = DateTime.Now
+            };
     }
 }

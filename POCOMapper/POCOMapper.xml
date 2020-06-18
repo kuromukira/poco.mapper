@@ -46,6 +46,16 @@
             <summary>Map to field</summary>
             <param name="name">Field Name</param>
         </member>
+        <member name="T:POCO.Mapper.UseFormat">
+            <summary>String formatting</summary>
+        </member>
+        <member name="P:POCO.Mapper.UseFormat.Format">
+            <summary></summary>
+        </member>
+        <member name="M:POCO.Mapper.UseFormat.#ctor(System.String)">
+            <summary>Format to be used when mapping to a string</summary>
+            <param name="format">String format</param>
+        </member>
         <member name="T:POCO.Mapper.IMapperException">
             <summary></summary>
         </member>
@@ -63,16 +73,16 @@
             <typeparam name="T">Target Type</typeparam>
             <typeparam name="S">Source Type</typeparam>
         </member>
-        <member name="M:POCO.Mapper.IMapper`2.from(`1)">
+        <member name="M:POCO.Mapper.IMapper`2.From(`1)">
             <summary>Map values from S to T</summary>
         </member>
-        <member name="M:POCO.Mapper.IMapper`2.from(`0)">
+        <member name="M:POCO.Mapper.IMapper`2.From(`0)">
             <summary>Map values from T to S</summary>
         </member>
-        <member name="M:POCO.Mapper.IMapper`2.from(System.Collections.Generic.IList{`1})">
+        <member name="M:POCO.Mapper.IMapper`2.From(System.Collections.Generic.IList{`1})">
             <summary>Map list from S to T</summary>
         </member>
-        <member name="M:POCO.Mapper.IMapper`2.from(System.Collections.Generic.IList{`0})">
+        <member name="M:POCO.Mapper.IMapper`2.From(System.Collections.Generic.IList{`0})">
             <summary>Map list from T to S</summary>
         </member>
         <member name="T:POCO.Mapper.ModelMapper`2">

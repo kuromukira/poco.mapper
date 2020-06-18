@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace POCO.Mapper.Common
 {
@@ -15,10 +16,14 @@ namespace POCO.Mapper.Common
             object output = Activator.CreateInstance(targetType);
             foreach (PropertyInfo convertProp in toConvert.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
+                // * Get ToString format attribute
+                object[] formatAttribute = convertProp.GetCustomAttributes(typeof(UseFormat), true);
+                UseFormat useFormat = ((UseFormat) (formatAttribute?.FirstOrDefault() ?? new UseFormat(string.Empty)));
+
                 // * Get custom attribute name
-                object[] mappedTo = convertProp.GetCustomAttributes(typeof(MappedTo), true);
-                MappedTo[] mappedToName = ((MappedTo[])(mappedTo ?? new MappedTo[] { }));
-                foreach (MappedTo mappedName in mappedToName)
+                object[] mappedToAttribute = convertProp.GetCustomAttributes(typeof(MappedTo), true);
+                MappedTo[] mappedToNames = ((MappedTo[]) (mappedToAttribute ?? new MappedTo[] { }));
+                foreach (MappedTo mappedName in mappedToNames)
                 {
                     // * Loop only through all properties that matched the target mapped name
                     foreach (PropertyInfo outputProp in output.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(prop => prop.Name.Equals(mappedName.Name)).ToList())
@@ -36,7 +41,7 @@ namespace POCO.Mapper.Common
                             // * Check source if Guid then convert to string
                             if (convertProp.PropertyType == typeof(Guid) && outputProp.PropertyType == typeof(string))
                             {
-                                Guid sourceValue = (Guid)convertProp.GetValue(toConvert);
+                                Guid sourceValue = (Guid) convertProp.GetValue(toConvert);
                                 outputProp.SetValue(output, sourceValue == Guid.Empty ? string.Empty : sourceValue.ToString());
                             }
                             // * Check source if string then  convert to Guid
@@ -55,21 +60,17 @@ namespace POCO.Mapper.Common
                         // * Check if IEnumerable (eg IList, List and Arrays)
                         else if (outputProp.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(outputProp.PropertyType))
                         {
-                            IEnumerable collection = (IEnumerable)convertProp.GetValue(toConvert, null);
+                            IEnumerable collection = (IEnumerable) convertProp.GetValue(toConvert, null);
                             if (!(collection is null))
                             {
                                 // * Define and check the target output list
                                 Type constructedListType = typeof(List<>).MakeGenericType(
-                                    !outputProp.PropertyType.IsArray ?
-                                    outputProp.PropertyType.GetGenericArguments()[0] :
-                                    outputProp.PropertyType.GetElementType()
+                                    !outputProp.PropertyType.IsArray ? outputProp.PropertyType.GetGenericArguments()[0] : outputProp.PropertyType.GetElementType()
                                 );
                                 if (constructedListType is null)
                                     throw new IMapperException("POCO.Mapper encountered an error with " + outputProp.PropertyType.Name);
-                                IList finalList = (IList)Activator.CreateInstance(constructedListType);
-                                bool isInnerElementCustom = !outputProp.PropertyType.IsArray ?
-                                    IsCustomType(outputProp.PropertyType.GetGenericArguments()[0]) :
-                                    IsCustomType(outputProp.PropertyType.GetElementType());
+                                IList finalList = (IList) Activator.CreateInstance(constructedListType);
+                                bool isInnerElementCustom = !outputProp.PropertyType.IsArray ? IsCustomType(outputProp.PropertyType.GetGenericArguments()[0]) : IsCustomType(outputProp.PropertyType.GetElementType());
 
                                 // * Loop through the objects to be mapped
                                 foreach (object obj in collection)
@@ -78,8 +79,7 @@ namespace POCO.Mapper.Common
                                     if (isInnerElementCustom)
                                     {
                                         // * Call method again to map list objects
-                                        object result = Map(obj, !outputProp.PropertyType.IsArray ?
-                                            outputProp.PropertyType.GetGenericArguments()[0] : outputProp.PropertyType.GetElementType()
+                                        object result = Map(obj, !outputProp.PropertyType.IsArray ? outputProp.PropertyType.GetGenericArguments()[0] : outputProp.PropertyType.GetElementType()
                                         );
                                         finalList.Add(result);
                                     }
@@ -104,17 +104,37 @@ namespace POCO.Mapper.Common
                             outputProp.SetValue(output, Map(convertProp.GetValue(toConvert), outputProp.PropertyType));
 
                         // * Default
-                        else outputProp.SetValue(output, convertProp.GetValue(toConvert));
+                        else
+                        {
+                            if (convertProp.PropertyType != typeof(string) && outputProp.PropertyType == typeof(string))
+                            {
+                                if (string.IsNullOrWhiteSpace(useFormat.Format))
+                                    outputProp.SetValue(output, convertProp.GetValue(toConvert).ToString());
+                                else
+                                {
+                                    if (Regex.IsMatch(useFormat.Format, @"\{0:(.*?)\}"))
+                                        outputProp.SetValue(output, string.Format(useFormat.Format, convertProp.GetValue(toConvert)));
+                                    else
+                                    {
+                                        string formatUsed = $"{{0:{useFormat.Format}}}";
+                                        outputProp.SetValue(output, string.Format(formatUsed, convertProp.GetValue(toConvert)));
+                                    }
+                                }
+                            }
+                            else outputProp.SetValue(output, convertProp.GetValue(toConvert));
+                        }
+
                         break;
                     }
                 }
             }
+
             return output;
 
             bool IsCustomType(Type outputType) => (!outputType.IsPrimitive && outputType.IsClass && !outputType.IsAbstract && outputType != typeof(string));
 
             bool IsGuidMapping(Type sourceType, Type converType) => ((sourceType == typeof(string) && converType == typeof(Guid)) ||
-                    (converType == typeof(string) && sourceType == typeof(Guid)));
+                (converType == typeof(string) && sourceType == typeof(Guid)));
         }
     }
 }
