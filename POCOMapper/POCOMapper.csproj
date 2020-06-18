@@ -18,8 +18,7 @@
       <Authors>Nor Gelera</Authors>
       <Product>POCO.Mapper</Product>
       <Version>2.2.1</Version>
-      <PackageReleaseNotes>- Add string format attribute when mapping other types to string.
-- Breaking: Rename methods used in IMapper interface</PackageReleaseNotes>
+      <PackageReleaseNotes>View release on https://github.com/kuromukira/poco.mapper/releases/tag/v2.3.0</PackageReleaseNotes>
       <AssemblyVersion>2.3.0.0</AssemblyVersion>
       <FileVersion>2.3.0.0</FileVersion>
   </PropertyGroup>
