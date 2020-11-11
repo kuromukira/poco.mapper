@@ -6,7 +6,6 @@
     <LangVersion>8</LangVersion>
     <Nullable>disable</Nullable>
     <Copyright>Nor Gelera 2020</Copyright>
-    <PackageLicenseUrl>https://github.com/kuromukira/poco.mapper/blob/master/LICENSE</PackageLicenseUrl>
     <Owners>Nor Gelera</Owners>
     <PackageReleaseNotes>View release on https://github.com/kuromukira/poco.mapper/releases/tag/v2.3.1</PackageReleaseNotes>
   </PropertyGroup>
