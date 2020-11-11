@@ -13,7 +13,7 @@
   <PropertyGroup>
       <PackageLicenseFile>LICENSE</PackageLicenseFile>
       <Description>An alternative "Plain Old C# Objects" mapper with minimal configuration required.</Description>
-      <Copyright>Nor Gelera 2019</Copyright>
+      <Copyright>Nor Gelera 2020</Copyright>
       <PackageProjectUrl>https://kuromukira.github.io/poco.mapper/</PackageProjectUrl>
       <RepositoryUrl>https://github.com/norgelera/poco.mapper</RepositoryUrl>
       <PackageTags>poco mapper mapping entity class equals</PackageTags>
@@ -21,9 +21,9 @@
       <Authors>Nor Gelera</Authors>
       <Product>POCO.Mapper</Product>
       <Version>2.2.1</Version>
-      <PackageReleaseNotes>View release on https://github.com/kuromukira/poco.mapper/releases/tag/v2.3.0</PackageReleaseNotes>
-      <AssemblyVersion>2.3.0.0</AssemblyVersion>
-      <FileVersion>2.3.0.0</FileVersion>
+      <PackageReleaseNotes>View release on https://github.com/kuromukira/poco.mapper/releases/tag/v2.3.1</PackageReleaseNotes>
+      <AssemblyVersion>2.3.1.0</AssemblyVersion>
+      <FileVersion>2.3.1.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
