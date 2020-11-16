@@ -2,12 +2,18 @@ trigger:
 - master
 
 pool:
-  vmImage: 'vs2017-win2016'
+  vmImage: Hosted Ubuntu 1604
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
+# Use .NET 5
+- task: UseDotNet@2
+  displayName: 'Use .NET 5'
+  inputs:
+    version: 5.x
+
 # Restore dependencies
 - script: |
     dotnet restore
