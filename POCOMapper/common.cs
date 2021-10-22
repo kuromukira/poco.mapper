@@ -32,6 +32,7 @@ namespace POCO.Mapper.Common
                         if (!outputProp.PropertyType.IsAssignableFrom(convertProp.PropertyType)
                             && !IsGuidMapping(convertProp.PropertyType, outputProp.PropertyType)
                             && !IsCustomType(outputProp.PropertyType)
+                            && !IsCustomValueType(outputProp.PropertyType)
                             && !typeof(IEnumerable).IsAssignableFrom(outputProp.PropertyType))
                             throw new IMapperException($"The source type ({convertProp.PropertyType.Name}) could not be converted to the target type ({outputProp.PropertyType.Name}).");
 
@@ -103,6 +104,10 @@ namespace POCO.Mapper.Common
                         else if (IsCustomType(outputProp.PropertyType))
                             outputProp.SetValue(output, Map(convertProp.GetValue(toConvert), outputProp.PropertyType));
 
+                        // * Check if a custom value type
+                        else if (IsCustomValueType(outputProp.PropertyType))
+                            outputProp.SetValue(output, Map(convertProp.GetValue(toConvert), outputProp.PropertyType));
+
                         // * Default
                         else
                         {
@@ -131,7 +136,9 @@ namespace POCO.Mapper.Common
 
             return output;
 
-            bool IsCustomType(Type outputType) => (!outputType.IsPrimitive && outputType.IsClass && !outputType.IsAbstract && outputType != typeof(string));
+            bool IsCustomType(Type outputType) => !outputType.IsPrimitive && outputType.IsClass && !outputType.IsAbstract && outputType != typeof(string) && outputType != typeof(object);
+
+            bool IsCustomValueType(Type outputType) => outputType.IsValueType && !outputType.IsPrimitive && outputType.Namespace != null;
 
             bool IsGuidMapping(Type sourceType, Type converType) => ((sourceType == typeof(string) && converType == typeof(Guid)) ||
                 (converType == typeof(string) && sourceType == typeof(Guid)));
