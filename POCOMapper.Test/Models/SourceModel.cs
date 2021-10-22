@@ -45,6 +45,9 @@ namespace POCOMapper.Test
         [MappedTo("NULL_OUTER")] public InnerSourceModel JustNullInner { get; set; }
         [MappedTo("NULL_OUTER_LIST")] public IList<InnerSourceModel> JustNullInnerList { get; set; }
         [MappedTo("NULL_OUTER_ARRAY")] public InnerSourceModel[] JustNullInnerArray { get; set; }
+
+        [MappedTo("RECORD")] public InnerSourceRecord RecordProperty { get; set; }
+        [MappedTo("STRUCT")] public InnerSourceStruct StructProperty { get; set; }
     }
 
     internal class InnerSourceModel

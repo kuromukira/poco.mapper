@@ -45,6 +45,12 @@ namespace POCO.Mapper.Test
             Assert.True(source.State == target.ENUM);
             Assert.True(source.ToGuidValue == target.STRING_GUID.ToString());
             Assert.True(source.ToStringValue.ToString() == target.GUID_STRING);
+            Assert.Same(source.RecordProperty.Object, target.RECORD.OBJECT);
+            Assert.Equal(source.RecordProperty.ObjectArray, target.RECORD.OBJECT_ARRAY);
+            Assert.Equal(source.RecordProperty.ObjectList, target.RECORD.OBJECT_LIST);
+            Assert.Same(source.StructProperty.Object, target.STRUCT.OBJECT);
+            Assert.Equal(source.StructProperty.ObjectArray, target.STRUCT.OBJECT_ARRAY);
+            Assert.Equal(source.StructProperty.ObjectList, target.STRUCT.OBJECT_LIST);
         }
 
         static void AssertMultiValues(MultipleMapSourceModel source, MultipleMapTargetModel target)
@@ -179,6 +185,9 @@ namespace POCO.Mapper.Test
                     Assert.Equal(_source.NumberList, _target.INT_LIST);
                     Assert.True(_source.ToGuidValue == _target.STRING_GUID.ToString());
                     Assert.True(_source.ToStringValue.ToString() == _target.GUID_STRING);
+                    Assert.Same(_source.RecordProperty.Object, _target.RECORD.OBJECT);
+                    Assert.Equal(_source.RecordProperty.ObjectArray, _target.RECORD.OBJECT_ARRAY);
+                    Assert.Equal(_source.RecordProperty.ObjectList, _target.RECORD.OBJECT_LIST);
                 }
             }
         }
@@ -230,6 +239,12 @@ namespace POCO.Mapper.Test
                     Assert.Equal(_source.NumberList, _target.INT_LIST);
                     Assert.True(_source.ToGuidValue == _target.STRING_GUID.ToString());
                     Assert.True(_source.ToStringValue.ToString() == _target.GUID_STRING);
+                    Assert.Same(_source.ClassProperty.Object, _target.CLASS.OBJECT);
+                    Assert.Equal(_source.ClassProperty.ObjectArray, _target.CLASS.OBJECT_ARRAY);
+                    Assert.Equal(_source.ClassProperty.ObjectList, _target.CLASS.OBJECT_LIST);
+                    Assert.Same(_source.StructProperty.Object, _target.STRUCT.OBJECT);
+                    Assert.Equal(_source.StructProperty.ObjectArray, _target.STRUCT.OBJECT_ARRAY);
+                    Assert.Equal(_source.StructProperty.ObjectList, _target.STRUCT.OBJECT_LIST);
                 }
             }
         }

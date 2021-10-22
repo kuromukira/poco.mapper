@@ -43,6 +43,9 @@ namespace POCOMapper.Test
         public InnerTargetRecord NULL_OUTER { get; set; }
         public IList<InnerTargetRecord> NULL_OUTER_LIST { get; set; }
         public InnerTargetRecord[] NULL_OUTER_ARRAY { get; set; }
+
+        public InnerTargetModel CLASS { get; set; }
+        public InnerTargetStruct STRUCT { get; set; }
     }
 
     internal record InnerTargetRecord

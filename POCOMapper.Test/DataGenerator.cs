@@ -94,7 +94,10 @@ namespace POCO.Mapper.Test
 
                 InnerSource = GenerateInnerSource(),
                 InnerSourceArray = Enumerable.Range(1, listSize).Select(i => GenerateInnerSource()).ToArray(),
-                InnerSourceList = Enumerable.Range(1, listSize).Select(i => GenerateInnerSource()).ToList()
+                InnerSourceList = Enumerable.Range(1, listSize).Select(i => GenerateInnerSource()).ToList(),
+
+                RecordProperty = GenerateInnerSourceRecord(),
+                StructProperty = GenerateInnerSourceStruct()
             };
         }
 
@@ -176,7 +179,9 @@ namespace POCO.Mapper.Test
 
                 InnerSourceStruct = GenerateInnerSourceStruct(),
                 InnerSourceArrayStruct = Enumerable.Range(1, listSize).Select(i => GenerateInnerSourceStruct()).ToArray(),
-                InnerSourceListStruct = Enumerable.Range(1, listSize).Select(i => GenerateInnerSourceStruct()).ToList()
+                InnerSourceListStruct = Enumerable.Range(1, listSize).Select(i => GenerateInnerSourceStruct()).ToList(),
+
+                RecordProperty = GenerateInnerSourceRecord()
             };
         }
 
@@ -236,7 +241,10 @@ namespace POCO.Mapper.Test
 
                 InnerSource = GenerateInnerSourceRecord(),
                 InnerSourceArray = Enumerable.Range(1, listSize).Select(i => GenerateInnerSourceRecord()).ToArray(),
-                InnerSourceList = Enumerable.Range(1, listSize).Select(i => GenerateInnerSourceRecord()).ToList()
+                InnerSourceList = Enumerable.Range(1, listSize).Select(i => GenerateInnerSourceRecord()).ToList(),
+
+                ClassProperty = GenerateInnerSource(),
+                StructProperty = GenerateInnerSourceStruct()
             };
         }
 
