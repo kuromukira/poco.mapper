@@ -181,5 +181,65 @@ namespace POCO.Mapper.Test
         }
 
         internal static IList<SourceStruct> GenerateSourceStructs(int limit) => Enumerable.Range(1, limit).Select(i => GenerateSourceStruct()).ToList();
+
+        private static InnerSourceRecord GenerateInnerSourceRecord()
+            => new()
+            {
+                Object = ValueGenerator.Word(),
+                ObjectArray = new List<object>
+                {
+                    ValueGenerator.Word(),
+                    ValueGenerator.Number(),
+                    ValueGenerator.Character()
+                }.ToArray(),
+                ObjectList = new List<object>
+                {
+                    ValueGenerator.Word(),
+                    ValueGenerator.Number(),
+                    ValueGenerator.Character()
+                }
+            };
+
+        private static SourceRecord GenerateSourceRecord()
+        {
+            int listSize = ValueGenerator.RandomNumber();
+            return new SourceRecord
+            {
+                Id = Guid.NewGuid(),
+                ToGuidValue = Guid.NewGuid().ToString(),
+                ToStringValue = Guid.NewGuid(),
+                Name = ValueGenerator.Word(),
+                Character = ValueGenerator.Character(),
+                Number = ValueGenerator.Number(),
+                LongNumber = ValueGenerator.Number(max: 1000),
+                Money = ValueGenerator.Number(max: 10000),
+                Currency = ValueGenerator.Number(max: 10000),
+                Percentage = ValueGenerator.Number(max: 100),
+
+                NameArray = Enumerable.Range(1, listSize).Select(i => ValueGenerator.Word()).ToArray(),
+                NameList = Enumerable.Range(1, listSize).Select(i => ValueGenerator.Word()).ToList(),
+
+                NumberArray = Enumerable.Range(1, listSize).Select(i => ValueGenerator.Number()).ToArray(),
+                NumberList = Enumerable.Range(1, listSize).Select(i => ValueGenerator.Number()).ToList(),
+
+                LongArray = Enumerable.Range(1, listSize).Select(i => (long)ValueGenerator.Number()).ToArray(),
+                LongList = Enumerable.Range(1, listSize).Select(i => (long)ValueGenerator.Number()).ToList(),
+
+                DecimalArray = Enumerable.Range(1, listSize).Select(i => (decimal)ValueGenerator.Number()).ToArray(),
+                DecimalList = Enumerable.Range(1, listSize).Select(i => (decimal)ValueGenerator.Number()).ToList(),
+
+                DoubleArray = Enumerable.Range(1, listSize).Select(i => (double)ValueGenerator.Number()).ToArray(),
+                DoubleList = Enumerable.Range(1, listSize).Select(i => (double)ValueGenerator.Number()).ToList(),
+
+                FloatArray = Enumerable.Range(1, listSize).Select(i => (float)ValueGenerator.Number()).ToArray(),
+                FloatList = Enumerable.Range(1, listSize).Select(i => (float)ValueGenerator.Number()).ToList(),
+
+                InnerSource = GenerateInnerSourceRecord(),
+                InnerSourceArray = Enumerable.Range(1, listSize).Select(i => GenerateInnerSourceRecord()).ToArray(),
+                InnerSourceList = Enumerable.Range(1, listSize).Select(i => GenerateInnerSourceRecord()).ToList()
+            };
+        }
+
+        internal static IList<SourceRecord> GenerateSourceRecords(int limit) => Enumerable.Range(1, limit).Select(i => GenerateSourceRecord()).ToList();
     }
 }
