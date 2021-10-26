@@ -52,6 +52,12 @@ namespace POCO.Mapper.Common
                                 Guid.TryParse(sourceValue, out Guid guidValue);
                                 outputProp.SetValue(output, guidValue);
                             }
+                            // * Expected to be GUID to GUID
+                            else
+                            {
+                                Guid sourceValue = (Guid)convertProp.GetValue(toConvert);
+                                outputProp.SetValue(output, sourceValue);
+                            }
                         }
 
                         // * Check if Enum
@@ -138,10 +144,13 @@ namespace POCO.Mapper.Common
 
             bool IsCustomType(Type outputType) => !outputType.IsPrimitive && outputType.IsClass && !outputType.IsAbstract && outputType != typeof(string) && outputType != typeof(object);
 
-            bool IsCustomValueType(Type outputType) => outputType.IsValueType && !outputType.IsPrimitive && outputType.Namespace != null;
+            /*
+             * Custom structs / custom value types has no CustomAttributes
+             */
+            bool IsCustomValueType(Type outputType) => outputType.IsValueType && !outputType.IsPrimitive && !outputType.CustomAttributes.Any() && outputType.Namespace != null;
 
-            bool IsGuidMapping(Type sourceType, Type converType) => ((sourceType == typeof(string) && converType == typeof(Guid)) ||
-                (converType == typeof(string) && sourceType == typeof(Guid)));
+            bool IsGuidMapping(Type sourceType, Type converType) => (sourceType == typeof(string) && converType == typeof(Guid)) ||
+                (converType == typeof(string) && sourceType == typeof(Guid)) || (converType == typeof(Guid) && sourceType == typeof(Guid));
         }
     }
 }

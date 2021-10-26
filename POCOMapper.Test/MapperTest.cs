@@ -76,6 +76,7 @@ namespace POCO.Mapper.Test
 
             foreach (SourceModel _source in source)
             {
+                Assert.Contains(target, t => t.GUID == _source.Id);
                 foreach (TargetModel _target in target.Where(t => t.GUID == _source.Id).ToList())
                     AssertValues(_source, _target);
             }
@@ -95,6 +96,7 @@ namespace POCO.Mapper.Test
 
             foreach (SourceModel _source in source)
             {
+                Assert.Contains(target, t => t.GUID == _source.Id);
                 foreach (TargetModel _target in target.Where(t => t.GUID == _source.Id).ToList())
                     AssertValues(_source, _target);
             }
@@ -114,6 +116,7 @@ namespace POCO.Mapper.Test
 
             foreach (MultipleMapSourceModel _source in source)
             {
+                Assert.Contains(target, t => t.GUID == _source.Id);
                 foreach (MultipleMapTargetModel _target in target.Where(t => t.GUID == _source.Id).ToList())
                     AssertMultiValues(_source, _target);
             }
@@ -133,6 +136,7 @@ namespace POCO.Mapper.Test
 
             foreach (MultipleMapSourceModel _source in source)
             {
+                Assert.Contains(target, t => t.GUID == _source.Id);
                 foreach (MultipleMapTargetModel _target in target.Where(t => t.GUID == _source.Id).ToList())
                     AssertMultiValues(_source, _target);
             }
@@ -152,6 +156,7 @@ namespace POCO.Mapper.Test
 
             foreach (SourceStruct _source in source)
             {
+                Assert.Contains(target, t => t.GUID == _source.Id);
                 foreach (TargetStruct _target in target.Where(t => t.GUID == _source.Id).ToList())
                 {
                     Assert.True(_source.Id == _target.GUID);
@@ -206,6 +211,7 @@ namespace POCO.Mapper.Test
 
             foreach (SourceRecord _source in source)
             {
+                Assert.Contains(target, t => t.GUID == _source.Id);
                 foreach (TargetRecord _target in target.Where(t => t.GUID == _source.Id).ToList())
                 {
                     Assert.True(_source.Id == _target.GUID);
