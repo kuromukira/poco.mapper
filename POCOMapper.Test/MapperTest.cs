@@ -13,8 +13,10 @@ namespace POCO.Mapper.Test
         private IMapper<TargetRecord, SourceRecord> IRecordMapper { get; } = new ModelMapper<TargetRecord, SourceRecord>();
         private IMapper<TargetToString, SourceToString> StringIMapper { get; } = new ModelMapper<TargetToString, SourceToString>();
         private IMapper<MultipleMapTargetModel, MultipleMapSourceModel> MultiFieldIMapper { get; } = new ModelMapper<MultipleMapTargetModel, MultipleMapSourceModel>();
+        private IMapper<SourceWithIgnoreModel, TargetWithIgnoreModel1> WithIgnoreFieldIMapper1 { get; } = new ModelMapper<SourceWithIgnoreModel, TargetWithIgnoreModel1>();
+        private IMapper<SourceWithIgnoreModel, TargetWithIgnoreModel2> WithIgnoreFieldIMapper2 { get; } = new ModelMapper<SourceWithIgnoreModel, TargetWithIgnoreModel2>();
 
-        static void AssertValues(SourceModel source, TargetModel target)
+        private void AssertValues(SourceModel source, TargetModel target)
         {
             Assert.True(source.Id == target.GUID);
             Assert.True(source.Character == target.CHAR);
@@ -53,7 +55,7 @@ namespace POCO.Mapper.Test
             Assert.Equal(source.StructProperty.ObjectList, target.STRUCT.OBJECT_LIST);
         }
 
-        static void AssertMultiValues(MultipleMapSourceModel source, MultipleMapTargetModel target)
+        private void AssertMultiValues(MultipleMapSourceModel source, MultipleMapTargetModel target)
         {
             Assert.True(source.Id == target.GUID);
             Assert.True(source.Text == target.STR);
@@ -271,6 +273,73 @@ namespace POCO.Mapper.Test
             TargetToString target = source.MapTo<TargetToString>();
 
             Assert.NotNull(target);
+        }
+
+        private void AssertWithIgnoreAttribute(IList<SourceWithIgnoreModel> source, IList<TargetWithIgnoreModel1> target1, IList<TargetWithIgnoreModel2> target2)
+        {
+            Assert.NotNull(target1);
+            foreach (SourceWithIgnoreModel _source in source)
+            {
+                Assert.Contains(target1, t => t.GUID == _source.Id);
+                foreach (TargetWithIgnoreModel1 _target1 in target1.Where(t => t.GUID == _source.Id).ToList())
+                {
+                    Assert.True(_source.Id == _target1.GUID);
+                    Assert.True(_source.ToGuidValue == _target1.STRING_GUID.ToString());
+                    Assert.True(_source.ToStringValue.ToString() == _target1.GUID_STRING);
+                    Assert.True(_source.Name == _target1.STRING);
+                    Assert.True(_target1.INT != _source.Number);
+                    Assert.True(_target1.LONG != _source.LongNumber);
+                    Assert.True(_target1.DECIMAL != _source.Money);
+                    Assert.True(_source.Currency == _target1.DOUBLE);
+                    Assert.True(_target1.FLOAT != _source.Percentage);
+                }
+            }
+
+            Assert.NotNull(target2);
+            foreach (SourceWithIgnoreModel _source in source)
+            {
+                Assert.Contains(target2, t => t.GUID == _source.Id);
+                foreach (TargetWithIgnoreModel2 _target2 in target2.Where(t => t.GUID == _source.Id).ToList())
+                {
+                    Assert.True(_source.Id == _target2.GUID);
+                    Assert.True(_source.ToGuidValue == _target2.STRING_GUID.ToString());
+                    Assert.True(_source.ToStringValue.ToString() == _target2.GUID_STRING);
+                    Assert.True(_target2.STRING != _source.Name);
+                    Assert.True(_target2.INT != _source.Number);
+                    Assert.True(_target2.LONG != _source.LongNumber);
+                    Assert.True(_source.Money == _target2.DECIMAL);
+                    Assert.True(_target2.DOUBLE != _source.Currency);
+                    Assert.True(_source.Percentage == _target2.FLOAT);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData(10)]
+        [InlineData(100)]
+        [InlineData(500)]
+        [InlineData(1000)]
+        public void Can_Map_Records_With_Ignore_Using_Extension_Methods(int sizes)
+        {
+            IList<SourceWithIgnoreModel> source = DataGenerator.GenerateSourceRecordsWithIgnore(sizes);
+            IList<TargetWithIgnoreModel1> target1 = source.MapToList<TargetWithIgnoreModel1>();
+            IList<TargetWithIgnoreModel2> target2 = source.MapToList<TargetWithIgnoreModel2>();
+
+            AssertWithIgnoreAttribute(source, target1, target2);
+        }
+
+        [Theory]
+        [InlineData(10)]
+        [InlineData(100)]
+        [InlineData(500)]
+        [InlineData(1000)]
+        public void Can_Map_Records_With_Ignore_Using_IMapper(int sizes)
+        {
+            IList<SourceWithIgnoreModel> source = DataGenerator.GenerateSourceRecordsWithIgnore(sizes);
+            IList<TargetWithIgnoreModel1> target1 = WithIgnoreFieldIMapper1.From(source);
+            IList<TargetWithIgnoreModel2> target2 = WithIgnoreFieldIMapper2.From(source);
+
+            AssertWithIgnoreAttribute(source, target1, target2);
         }
     }
 }

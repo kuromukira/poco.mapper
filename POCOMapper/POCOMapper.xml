@@ -4,6 +4,48 @@
         <name>POCOMapper</name>
     </assembly>
     <members>
+        <member name="T:POCO.Mapper.MappedTo">
+            <summary>Mapper Attribute Target</summary>
+        </member>
+        <member name="P:POCO.Mapper.MappedTo.Name">
+            <summary></summary>
+        </member>
+        <member name="M:POCO.Mapper.MappedTo.#ctor(System.String)">
+            <summary>Map to field</summary>
+            <param name="name">Field Name</param>
+        </member>
+        <member name="T:POCO.Mapper.UseFormat">
+            <summary>String formatting</summary>
+        </member>
+        <member name="P:POCO.Mapper.UseFormat.Format">
+            <summary></summary>
+        </member>
+        <member name="M:POCO.Mapper.UseFormat.#ctor(System.String)">
+            <summary>Format to be used when mapping to a string</summary>
+            <param name="format">String format</param>
+        </member>
+        <member name="T:POCO.Mapper.IgnoreIf">
+            <summary>Mapper Attribute Target</summary>
+        </member>
+        <member name="P:POCO.Mapper.IgnoreIf.TargetType">
+            <summary></summary>
+        </member>
+        <member name="M:POCO.Mapper.IgnoreIf.#ctor(System.Type)">
+            <summary>Ignore this property when mapping to the given target type</summary>
+            <param name="type">Target Type</param>
+        </member>
+        <member name="T:POCO.Mapper.IMapperException">
+            <summary></summary>
+        </member>
+        <member name="M:POCO.Mapper.IMapperException.#ctor">
+            <summary></summary>
+        </member>
+        <member name="M:POCO.Mapper.IMapperException.#ctor(System.String)">
+            <summary></summary>
+        </member>
+        <member name="M:POCO.Mapper.IMapperException.#ctor(System.String,System.Exception)">
+            <summary></summary>
+        </member>
         <member name="T:POCO.Mapper.Extension.ModelMap">
             <summary>Inherit from this class to use extensions</summary>
         </member>
@@ -35,38 +77,6 @@
         <member name="M:POCO.Mapper.Extension.POCOMapperExtensions.MapToArray``1(POCO.Mapper.Extension.ModelMap[])">
             <summary>Map values from current POCO to Target Type</summary>
             <typeparam name="T">Target Type</typeparam>
-        </member>
-        <member name="T:POCO.Mapper.MappedTo">
-            <summary>Mapper Attribute Target</summary>
-        </member>
-        <member name="P:POCO.Mapper.MappedTo.Name">
-            <summary></summary>
-        </member>
-        <member name="M:POCO.Mapper.MappedTo.#ctor(System.String)">
-            <summary>Map to field</summary>
-            <param name="name">Field Name</param>
-        </member>
-        <member name="T:POCO.Mapper.UseFormat">
-            <summary>String formatting</summary>
-        </member>
-        <member name="P:POCO.Mapper.UseFormat.Format">
-            <summary></summary>
-        </member>
-        <member name="M:POCO.Mapper.UseFormat.#ctor(System.String)">
-            <summary>Format to be used when mapping to a string</summary>
-            <param name="format">String format</param>
-        </member>
-        <member name="T:POCO.Mapper.IMapperException">
-            <summary></summary>
-        </member>
-        <member name="M:POCO.Mapper.IMapperException.#ctor">
-            <summary></summary>
-        </member>
-        <member name="M:POCO.Mapper.IMapperException.#ctor(System.String)">
-            <summary></summary>
-        </member>
-        <member name="M:POCO.Mapper.IMapperException.#ctor(System.String,System.Exception)">
-            <summary></summary>
         </member>
         <member name="T:POCO.Mapper.IMapper`2">
             <summary>Map values from S to T and/or vice versa</summary>
