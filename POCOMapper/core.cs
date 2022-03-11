@@ -31,13 +31,13 @@ namespace POCO.Mapper.Common
                 // * Iterate through MappedTo[]
                 foreach (MappedTo mappedName in mappedToNames.Distinct().ToList())
                 {
+                    // * Check if the property is ignored via IgnoreIf attribute
+                    if (ignoreIfTypes.ToList().Any(ignore => ignore.TargetType.Equals(output.GetType())))
+                        continue;
+
                     // * Loop only through all properties that matched the target mapped name
                     foreach (PropertyInfo outputProp in output.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(prop => prop.Name.Equals(mappedName.Name)).ToList())
                     {
-                        // * Check if the property is ignored via IgnoreIf attribute
-                        if (ignoreIfTypes.Distinct().ToList().Any(ignore => ignore.TargetType.Equals(outputProp.PropertyType)))
-                            continue;
-
                         // * Validation for type mismatch except for collections
                         if (!outputProp.PropertyType.IsAssignableFrom(convertProp.PropertyType)
                             && !IsGuidMapping(convertProp.PropertyType, outputProp.PropertyType)
