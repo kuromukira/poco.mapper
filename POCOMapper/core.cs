@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace POCO.Mapper.Common
 {
-    internal class ModelMapperCommon
+    internal class ModelMapperCore
     {
         public object Map(object toConvert, Type targetType)
         {
@@ -18,16 +18,26 @@ namespace POCO.Mapper.Common
             {
                 // * Get ToString format attribute
                 object[] formatAttribute = convertProp.GetCustomAttributes(typeof(UseFormat), true);
-                UseFormat useFormat = ((UseFormat) (formatAttribute?.FirstOrDefault() ?? new UseFormat(string.Empty)));
+                UseFormat useFormat = ((UseFormat)(formatAttribute?.FirstOrDefault() ?? new UseFormat(string.Empty)));
+
+                // * Get IgnoreIf attribute values
+                object[] ignoreIfAttribute = convertProp.GetCustomAttributes(typeof(IgnoreIf), true);
+                IgnoreIf[] ignoreIfTypes = ((IgnoreIf[])(ignoreIfAttribute ?? new IgnoreIf[] { }));
 
                 // * Get custom attribute name
                 object[] mappedToAttribute = convertProp.GetCustomAttributes(typeof(MappedTo), true);
-                MappedTo[] mappedToNames = ((MappedTo[]) (mappedToAttribute ?? new MappedTo[] { }));
-                foreach (MappedTo mappedName in mappedToNames)
+                MappedTo[] mappedToNames = ((MappedTo[])(mappedToAttribute ?? new MappedTo[] { }));
+
+                // * Iterate through MappedTo[]
+                foreach (MappedTo mappedName in mappedToNames.Distinct().ToList())
                 {
                     // * Loop only through all properties that matched the target mapped name
                     foreach (PropertyInfo outputProp in output.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(prop => prop.Name.Equals(mappedName.Name)).ToList())
                     {
+                        // * Check if the property is ignored via IgnoreIf attribute
+                        if (ignoreIfTypes.Distinct().ToList().Any(ignore => ignore.TargetType.Equals(outputProp.PropertyType)))
+                            continue;
+
                         // * Validation for type mismatch except for collections
                         if (!outputProp.PropertyType.IsAssignableFrom(convertProp.PropertyType)
                             && !IsGuidMapping(convertProp.PropertyType, outputProp.PropertyType)
@@ -42,7 +52,7 @@ namespace POCO.Mapper.Common
                             // * Check source if Guid then convert to string
                             if (convertProp.PropertyType == typeof(Guid) && outputProp.PropertyType == typeof(string))
                             {
-                                Guid sourceValue = (Guid) convertProp.GetValue(toConvert);
+                                Guid sourceValue = (Guid)convertProp.GetValue(toConvert);
                                 outputProp.SetValue(output, sourceValue == Guid.Empty ? string.Empty : sourceValue.ToString());
                             }
                             // * Check source if string then  convert to Guid
@@ -67,7 +77,7 @@ namespace POCO.Mapper.Common
                         // * Check if IEnumerable (eg IList, List and Arrays)
                         else if (outputProp.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(outputProp.PropertyType))
                         {
-                            IEnumerable collection = (IEnumerable) convertProp.GetValue(toConvert, null);
+                            IEnumerable collection = (IEnumerable)convertProp.GetValue(toConvert, null);
                             if (!(collection is null))
                             {
                                 // * Define and check the target output list
@@ -76,7 +86,7 @@ namespace POCO.Mapper.Common
                                 );
                                 if (constructedListType is null)
                                     throw new IMapperException("POCO.Mapper encountered an error with " + outputProp.PropertyType.Name);
-                                IList finalList = (IList) Activator.CreateInstance(constructedListType);
+                                IList finalList = (IList)Activator.CreateInstance(constructedListType);
                                 bool isInnerElementCustom = !outputProp.PropertyType.IsArray ? IsCustomType(outputProp.PropertyType.GetGenericArguments()[0]) : IsCustomType(outputProp.PropertyType.GetElementType());
 
                                 // * Loop through the objects to be mapped
@@ -149,8 +159,8 @@ namespace POCO.Mapper.Common
              */
             bool IsCustomValueType(Type outputType) => outputType.IsValueType && !outputType.IsPrimitive && !outputType.CustomAttributes.Any() && outputType.Namespace != null;
 
-            bool IsGuidMapping(Type sourceType, Type converType) => (sourceType == typeof(string) && converType == typeof(Guid)) ||
-                (converType == typeof(string) && sourceType == typeof(Guid)) || (converType == typeof(Guid) && sourceType == typeof(Guid));
+            bool IsGuidMapping(Type sourceType, Type convertType) => (sourceType == typeof(string) && convertType == typeof(Guid)) ||
+                (convertType == typeof(string) && sourceType == typeof(Guid)) || (convertType == typeof(Guid) && sourceType == typeof(Guid));
         }
     }
 }
