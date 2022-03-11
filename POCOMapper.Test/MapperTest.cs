@@ -287,11 +287,11 @@ namespace POCO.Mapper.Test
                     Assert.True(_source.ToGuidValue == _target1.STRING_GUID.ToString());
                     Assert.True(_source.ToStringValue.ToString() == _target1.GUID_STRING);
                     Assert.True(_source.Name == _target1.STRING);
-                    Assert.True(_source.Number != _target1.INT);
-                    Assert.True(_source.LongNumber != _target1.LONG);
-                    Assert.True(_source.Money != _target1.DECIMAL);
+                    Assert.True(_target1.INT == 0);
+                    Assert.True(_target1.LONG == 0);
+                    Assert.True(_target1.DECIMAL == 0);
                     Assert.True(_source.Currency == _target1.DOUBLE);
-                    Assert.True(_source.Percentage != _target1.FLOAT);
+                    Assert.True(_target1.FLOAT == 0);
                 }
             }
 
@@ -304,11 +304,11 @@ namespace POCO.Mapper.Test
                     Assert.True(_source.Id == _target2.GUID);
                     Assert.True(_source.ToGuidValue == _target2.STRING_GUID.ToString());
                     Assert.True(_source.ToStringValue.ToString() == _target2.GUID_STRING);
-                    Assert.True(_source.Name != _target2.STRING);
-                    Assert.True(_source.Number != _target2.INT);
-                    Assert.True(_source.LongNumber != _target2.LONG);
+                    Assert.True(string.IsNullOrWhiteSpace(_target2.STRING));
+                    Assert.True(_target2.INT == 0);
+                    Assert.True(_target2.LONG == 0);
                     Assert.True(_source.Money == _target2.DECIMAL);
-                    Assert.True(_source.Currency != _target2.DOUBLE);
+                    Assert.True(_target2.DOUBLE == 0);
                     Assert.True(_source.Percentage == _target2.FLOAT);
                 }
             }
