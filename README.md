@@ -7,7 +7,6 @@ POCO stands for "Plain Old C# Object" or "Plain Old CLR Object", depending on wh
 ![Nuget](https://img.shields.io/nuget/dt/POCOMapper)
 ![Nuget](https://img.shields.io/nuget/v/POCOMapper)
 ![GitHub](https://img.shields.io/github/license/kuromukira/poco.mapper)
-[![CodeFactor](https://www.codefactor.io/repository/github/kuromukira/poco.mapper/badge)](https://www.codefactor.io/repository/github/kuromukira/poco.mapper)
 
 # Why?
 

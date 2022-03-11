@@ -32,7 +32,7 @@ namespace POCO.Mapper.Extension
     /// <summary>Model Mapper Extension Methods</summary>
     public static class POCOMapperExtensions
     {
-        private static readonly ModelMapperCommon Common = new();
+        private static readonly ModelMapperCore Common = new();
 
         /// <summary>Map values from current POCO to Target Type</summary>
         /// <typeparam name="T">Target Type</typeparam>

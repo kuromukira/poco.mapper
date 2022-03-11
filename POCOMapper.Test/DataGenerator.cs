@@ -249,5 +249,20 @@ namespace POCO.Mapper.Test
         }
 
         internal static IList<SourceRecord> GenerateSourceRecords(int limit) => Enumerable.Range(1, limit).Select(i => GenerateSourceRecord()).ToList();
+
+        private static SourceWithIgnoreModel GenerateSourceRecordWithIgnore() => new SourceWithIgnoreModel
+        {
+            Id = Guid.NewGuid(),
+            ToGuidValue = Guid.NewGuid().ToString(),
+            ToStringValue = Guid.NewGuid(),
+            Name = ValueGenerator.Word(),
+            Number = ValueGenerator.Number(),
+            LongNumber = ValueGenerator.Number(max: 1000),
+            Money = ValueGenerator.Number(max: 10000),
+            Currency = ValueGenerator.Number(max: 10000),
+            Percentage = ValueGenerator.Number(max: 100),
+        };
+
+        internal static IList<SourceWithIgnoreModel> GenerateSourceRecordsWithIgnore(int limit) => Enumerable.Range(1, limit).Select(i => GenerateSourceRecordWithIgnore()).ToList();
     }
 }
