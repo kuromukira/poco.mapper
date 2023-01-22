@@ -21,13 +21,13 @@ jobs:
     # Restore
     - name: Restore dependencies
       run: |
-        cd ./code
+        cd ./POCOMapper
         dotnet restore
       
     # Build
     - name: Build
       run: |
-        cd ./code
+        cd ./POCOMapper
         dotnet build --no-restore
 
     # Pack
