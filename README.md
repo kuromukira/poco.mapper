@@ -3,7 +3,6 @@ An alternative "Plain Old C# Objects" mapper with minimal configuration required
 
 POCO stands for "Plain Old C# Object" or "Plain Old CLR Object", depending on who you ask. This library is a custom mapper for POCOs (map values of identical properties from one POCO to another POCO). Minimal configuration is needed.
 
-![Azure Pipeline](https://img.shields.io/azure-devops/build/norgelera/dabf89f6-646a-4c51-ac54-7349811a3405/6/master.svg)
 ![Nuget](https://img.shields.io/nuget/dt/POCOMapper)
 ![Nuget](https://img.shields.io/nuget/v/POCOMapper)
 ![GitHub](https://img.shields.io/github/license/kuromukira/poco.mapper)
@@ -59,6 +58,7 @@ public class Work : ModelMap
     public string Title { get; set; }
     
     [MappedTo("WorkAddress")]
+    [IgnoreIf(typeof(AnotherObject)] // This property will not get mapped if the target type is AnotherObject
     public string Address { get; set; }
 }
 
@@ -88,7 +88,7 @@ public class WorkViewModel
 void Map()
 {
     // Example Data Only
-    Employee _employee = new Employee
+    using Employee _employee = new Employee
     {
         EmployeeId = 1,
         FirstName = "Nor",
@@ -116,7 +116,7 @@ void Map()
 void Map()
 {
     // Example Data Only
-    Employee _employee = new Employee
+    using Employee _employee = new Employee
     {
         EmployeeId = 1,
         FirstName = "Nor",
