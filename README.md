@@ -58,7 +58,7 @@ public class Work : ModelMap
     public string Title { get; set; }
     
     [MappedTo("WorkAddress")]
-    [IgnoreIf(typeof(AnotherObject)] // This property will not get mapped if the target type is AnotherObject
+    [IgnoreIf(typeof(AnotherObject))] // This property will not get mapped if the target type is AnotherObject
     public string Address { get; set; }
 }
 
