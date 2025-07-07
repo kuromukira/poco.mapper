@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <PackageVersion>2.6.1</PackageVersion>
+    <PackageVersion>2.6.2</PackageVersion>
     <LangVersion>9</LangVersion>
     <Nullable>disable</Nullable>
     <Copyright>Nor Gelera 2021</Copyright>
@@ -20,10 +20,10 @@
       <RepositoryType>Git</RepositoryType>
       <Authors>Nor Gelera</Authors>
       <Product>POCO.Mapper</Product>
-      <Version>2.6.1</Version>
-      <PackageReleaseNotes>View release on https://github.com/kuromukira/poco.mapper/releases/tag/v2.6.1</PackageReleaseNotes>
-      <AssemblyVersion>2.6.1.0</AssemblyVersion>
-      <FileVersion>2.6.1.0</FileVersion>
+      <Version>2.6.2</Version>
+      <PackageReleaseNotes>View release on https://github.com/kuromukira/poco.mapper/releases/tag/v2.6.0</PackageReleaseNotes>
+      <AssemblyVersion>2.6.2.0</AssemblyVersion>
+      <FileVersion>2.6.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
