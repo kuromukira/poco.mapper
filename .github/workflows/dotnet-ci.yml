@@ -12,7 +12,7 @@ jobs:
           dotnet-version: '9.x'
           include-prerelease: true
       - name: Restore
-        working-directory: ./code/
+        working-directory: ./
         run: dotnet restore
   build:
     needs: restore
