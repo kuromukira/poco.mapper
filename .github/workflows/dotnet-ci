@@ -1,0 +1,29 @@
+on: push
+name: dotnet-ci
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '9.x'
+          include-prerelease: true
+      - name: Restore
+        working-directory: ./code/
+        run: dotnet restore
+  build:
+    needs: restore
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '9.x'
+          include-prerelease: true
+      - name: Build
+        working-directory: ./
+        run: dotnet build
