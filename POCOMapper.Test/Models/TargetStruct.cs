@@ -17,7 +17,7 @@ public struct TargetStruct
 	public float FLOAT { get; set; }
 
 	public string[] STRING_ARRAY { get; set; }
-	public IList<string> STRIN_LIST { get; set; }
+	public IList<string> STRING_LIST { get; set; }
 
 	public int[] INT_ARRAY { get; set; }
 	public IList<int> INT_LIST { get; set; }

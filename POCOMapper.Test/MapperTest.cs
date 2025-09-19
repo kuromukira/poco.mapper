@@ -36,12 +36,14 @@ public class MapperTest
 		Assert.Same(source.JustNullInner, target.NULL_OUTER);
 		Assert.Same(source.JustNullInnerArray, target.NULL_OUTER_ARRAY);
 		Assert.Same(source.JustNullInnerList, target.NULL_OUTER_LIST);
+		Assert.Equal(source.NameArray, target.STRING_ARRAY);
+		Assert.Equal(source.NameList, target.STRING_LIST);
 		Assert.Equal(source.LongArray, target.LONG_ARRAY);
 		Assert.Equal(source.LongList, target.LONG_LIST);
 		Assert.True(source.LongNumber == target.LONG);
 		Assert.True(source.Name == target.STRING);
 		Assert.Equal(source.NameArray, target.STRING_ARRAY);
-		Assert.Equal(source.NameList, target.STRIN_LIST);
+		Assert.Equal(source.NameList, target.STRING_LIST);
 		Assert.True(source.Number == target.INT);
 		Assert.Equal(source.NumberArray, target.INT_ARRAY);
 		Assert.Equal(source.NumberList, target.INT_LIST);
@@ -187,7 +189,7 @@ public class MapperTest
 				Assert.True(_source.LongNumber == _target.LONG);
 				Assert.True(_source.Name == _target.STRING);
 				Assert.Equal(_source.NameArray, _target.STRING_ARRAY);
-				Assert.Equal(_source.NameList, _target.STRIN_LIST);
+				Assert.Equal(_source.NameList, _target.STRING_LIST);
 				Assert.True(_source.Number == _target.INT);
 				Assert.Equal(_source.NumberArray, _target.INT_ARRAY);
 				Assert.Equal(_source.NumberList, _target.INT_LIST);
@@ -242,7 +244,7 @@ public class MapperTest
 				Assert.True(_source.LongNumber == _target.LONG);
 				Assert.True(_source.Name == _target.STRING);
 				Assert.Equal(_source.NameArray, _target.STRING_ARRAY);
-				Assert.Equal(_source.NameList, _target.STRIN_LIST);
+				Assert.Equal(_source.NameList, _target.STRING_LIST);
 				Assert.True(_source.Number == _target.INT);
 				Assert.Equal(_source.NumberArray, _target.INT_ARRAY);
 				Assert.Equal(_source.NumberList, _target.INT_LIST);

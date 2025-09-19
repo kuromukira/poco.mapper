@@ -20,7 +20,7 @@ public class SourceModel : ModelMap
 	[MappedTo("ENUM")] public CommonModel.DataState State { get; set; } = CommonModel.DataState.New;
 
 	[MappedTo("STRING_ARRAY")] public string[] NameArray { get; set; }
-	[MappedTo("STRIN_LIST")] public IList<string> NameList { get; set; }
+	[MappedTo("STRING_LIST")] public IList<string> NameList { get; set; }
 
 	[MappedTo("INT_ARRAY")] public int[] NumberArray { get; set; }
 	[MappedTo("INT_LIST")] public IList<int> NumberList { get; set; }

@@ -40,10 +40,10 @@ internal class ModelMapperCore
 				{
 					// * Validation for type mismatch except for collections
 					if (!outputProp.PropertyType.IsAssignableFrom(convertProp.PropertyType)
-					    && !IsGuidMapping(convertProp.PropertyType, outputProp.PropertyType)
-					    && !IsCustomType(outputProp.PropertyType)
-					    && !IsCustomValueType(outputProp.PropertyType)
-					    && !typeof(IEnumerable).IsAssignableFrom(outputProp.PropertyType))
+						&& !IsGuidMapping(convertProp.PropertyType, outputProp.PropertyType)
+						&& !IsCustomType(outputProp.PropertyType)
+						&& !IsCustomValueType(outputProp.PropertyType)
+						&& !typeof(IEnumerable).IsAssignableFrom(outputProp.PropertyType))
 						throw new IMapperException($"The source type ({convertProp.PropertyType.Name}) could not be converted to the target type ({outputProp.PropertyType.Name}).");
 
 					// * Check if Guid to String mapping or vice versa
@@ -159,9 +159,25 @@ internal class ModelMapperCore
 		/*
 		 * Custom structs / custom value types has no CustomAttributes
 		 */
-		bool IsCustomValueType(Type outputType) => outputType.IsValueType && !outputType.IsPrimitive && !outputType.CustomAttributes.Any() && outputType.Namespace != null;
+		bool IsCustomValueType(Type outputType)
+		{
+			if (!outputType.IsValueType || outputType.IsPrimitive || outputType.Namespace == null)
+				return false;
+
+			string asmName = outputType.Assembly.GetName().Name ?? string.Empty;
+
+			// Treat types from assemblies that start with "System" or "Microsoft" as framework types.
+			if (asmName.StartsWith("System", StringComparison.Ordinal) || asmName.StartsWith("Microsoft", StringComparison.Ordinal))
+				return false;
+
+			// Also exclude the core runtime assembly (where object, Int32, etc. live).
+			if (outputType.Assembly == typeof(object).Assembly)
+				return false;
+
+			return true;
+		}
 
 		bool IsGuidMapping(Type sourceType, Type convertType) => (sourceType == typeof(string) && convertType == typeof(Guid)) ||
-		                                                         (convertType == typeof(string) && sourceType == typeof(Guid)) || (convertType == typeof(Guid) && sourceType == typeof(Guid));
+																 (convertType == typeof(string) && sourceType == typeof(Guid)) || (convertType == typeof(Guid) && sourceType == typeof(Guid));
 	}
 }

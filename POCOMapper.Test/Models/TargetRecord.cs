@@ -18,7 +18,7 @@ public record TargetRecord
 	public CommonModel.DataState ENUM { get; set; }
 
 	public string[] STRING_ARRAY { get; set; }
-	public IList<string> STRIN_LIST { get; set; }
+	public IList<string> STRING_LIST { get; set; }
 
 	public int[] INT_ARRAY { get; set; }
 	public IList<int> INT_LIST { get; set; }

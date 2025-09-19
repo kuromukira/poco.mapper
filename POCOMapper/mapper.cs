@@ -1,7 +1,5 @@
 using POCO.Mapper.Common;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace POCO.Mapper;
 
@@ -36,23 +34,29 @@ public class ModelMapper<T, S> : IMapper<T, S>
 
 	IList<T> IMapper<T, S>.From(IList<S> source)
 	{
-		if (!source.Any())
-			return new List<T>();
-		else
-		{
-			IMapper<T, S> mapper = new ModelMapper<T, S>();
-			return source.Select(s => mapper.From(s)).ToList();
-		}
+		if (source is null || source.Count == 0)
+			return [];
+
+		IMapper<T, S> mapper = (IMapper<T, S>)this;
+
+		List<T> result = new(source.Count);
+		for (int i = 0; i < source.Count; i++)
+			result.Add(mapper.From(source[i]));
+
+		return result;
 	}
 
 	IList<S> IMapper<T, S>.From(IList<T> target)
 	{
-		if (!target.Any())
-			return new List<S>();
-		else
-		{
-			IMapper<T, S> mapper = new ModelMapper<T, S>();
-			return target.Select(t => mapper.From(t)).ToList();
-		}
+		if (target is null || target.Count == 0)
+			return [];
+
+		IMapper<T, S> mapper = (IMapper<T, S>)this;
+
+		List<S> result = new(target.Count);
+		for (int i = 0; i < target.Count; i++)
+			result.Add(mapper.From(target[i]));
+
+		return result;
 	}
 }
