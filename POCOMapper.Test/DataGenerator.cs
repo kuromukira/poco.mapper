@@ -18,7 +18,7 @@ public class CommonModel
 
 static class ValueGenerator
 {
-	private static readonly Random Random = new Random();
+	private static readonly Random Random = new();
 
 	internal static int RandomNumber() => Random.Next(1, 50);
 
@@ -27,7 +27,7 @@ static class ValueGenerator
 	internal static string Word()
 	{
 		int size = Random.Next(3, 5);
-		StringBuilder builder = new StringBuilder(string.Empty);
+		StringBuilder builder = new(string.Empty);
 		for (int i = 0; i < size; i++)
 			builder.Append((char)Random.Next(65, 90));
 		return builder.ToString();
@@ -59,7 +59,7 @@ public class DataGenerator
 	private static SourceModel GenerateSourceModel()
 	{
 		int listSize = ValueGenerator.RandomNumber();
-		return new SourceModel
+		return new()
 		{
 			Id = Guid.NewGuid(),
 			ToGuidValue = Guid.NewGuid().ToString(),
@@ -141,7 +141,7 @@ public class DataGenerator
 	private static SourceStruct GenerateSourceStruct()
 	{
 		int listSize = ValueGenerator.RandomNumber();
-		return new SourceStruct
+		return new()
 		{
 			Id = Guid.NewGuid(),
 			ToGuidValue = Guid.NewGuid().ToString(),
@@ -207,7 +207,7 @@ public class DataGenerator
 	private static SourceRecord GenerateSourceRecord()
 	{
 		int listSize = ValueGenerator.RandomNumber();
-		return new SourceRecord
+		return new()
 		{
 			Id = Guid.NewGuid(),
 			ToGuidValue = Guid.NewGuid().ToString(),
@@ -249,7 +249,7 @@ public class DataGenerator
 
 	internal static IList<SourceRecord> GenerateSourceRecords(int limit) => Enumerable.Range(1, limit).Select(i => GenerateSourceRecord()).ToList();
 
-	private static SourceWithIgnoreModel GenerateSourceRecordWithIgnore() => new SourceWithIgnoreModel
+	private static SourceWithIgnoreModel GenerateSourceRecordWithIgnore() => new()
 	{
 		Id = Guid.NewGuid(),
 		ToGuidValue = Guid.NewGuid().ToString(),

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using POCO.Mapper;
 using POCO.Mapper.Extension;
@@ -343,5 +344,83 @@ public class MapperTest
 		IList<TargetWithIgnoreModel2> target2 = WithIgnoreFieldIMapper2.From(source);
 
 		AssertWithIgnoreAttribute(source, target1, target2);
+	}
+
+	[Fact]
+	public void Can_Map_Empty_Collections_In_Struct_Without_NullReferenceException()
+	{
+		SourceStruct source = new()
+		{
+			Id = Guid.NewGuid(),
+			Name = "Test",
+			Number = 42,
+			JustNullInnerList = new List<InnerSourceModel>(), // Empty collection
+			JustNullInnerArray = []     // Empty array
+		};
+
+		TargetStruct target = IStructMapper.From(source);
+
+		Assert.NotNull(target.NULL_OUTER_LIST);
+		Assert.NotNull(target.NULL_OUTER_ARRAY);
+		Assert.Empty(target.NULL_OUTER_LIST);
+		Assert.Empty(target.NULL_OUTER_ARRAY);
+	}
+
+	[Fact]
+	public void Can_Map_Multiple_Structs_With_Empty_Collections_Without_NullReferenceException()
+	{
+		List<SourceStruct> sourceList =
+		[
+			new()
+			{
+				Id = Guid.NewGuid(),
+				Name = "Test1",
+				Number = 1,
+				JustNullInnerList = new List<InnerSourceModel>(),
+				JustNullInnerArray = []
+			},
+
+			new()
+			{
+				Id = Guid.NewGuid(),
+				Name = "Test2",
+				Number = 2,
+				JustNullInnerList = new List<InnerSourceModel>(),
+				JustNullInnerArray = []
+			}
+		];
+
+		IList<TargetStruct> targetList = IStructMapper.From(sourceList);
+
+		Assert.NotNull(targetList);
+		Assert.Equal(2, targetList.Count);
+
+		foreach (TargetStruct target in targetList)
+		{
+			Assert.NotNull(target.NULL_OUTER_LIST);
+			Assert.NotNull(target.NULL_OUTER_ARRAY);
+			Assert.Empty(target.NULL_OUTER_LIST);
+			Assert.Empty(target.NULL_OUTER_ARRAY);
+		}
+	}
+
+	[Fact]
+	public void Can_Map_Model_Empty_Collections_Without_NullReferenceException()
+	{
+		SourceModel source = new()
+		{
+			Id = Guid.NewGuid(),
+			Name = "Test",
+			Number = 42,
+			JustNullInnerList = new List<InnerSourceModel>(), // Empty collection
+			JustNullInnerArray = []     // Empty array
+		};
+
+		TargetModel target = IMapper.From(source);
+
+		Assert.NotNull(target.NULL_OUTER_LIST);
+		Assert.NotNull(target.NULL_OUTER_ARRAY);
+		Assert.Empty(target.NULL_OUTER_LIST);
+		Assert.Empty(target.NULL_OUTER_ARRAY);
 	}
 }
