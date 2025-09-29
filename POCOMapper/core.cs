@@ -116,8 +116,18 @@ internal class ModelMapperCore
 
 					else if (outputProp.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(outputProp.PropertyType))
 					{
-						IEnumerable collection = (IEnumerable)convertProp.GetValue(toConvert, null);
-						if (!(collection is null))
+						object? sourceValue = convertProp.GetValue(toConvert, null);
+						IEnumerable? collection = sourceValue as IEnumerable;
+						
+						if (sourceValue is not null && collection is null)
+						{
+							throw new InvalidOperationException(
+								$"Cannot map property '{convertProp.Name}' of type '{convertProp.PropertyType.Name}' " +
+								$"to collection property '{outputProp.Name}' of type '{outputProp.PropertyType.Name}'. " +
+								$"Source property is not enumerable.");
+						}
+						
+						if (collection is not null)
 						{
 							Type? elementType;
 							if (outputProp.PropertyType.IsArray)
