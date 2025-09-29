@@ -20,29 +20,22 @@ internal class ModelMapperCore
 		object output = Activator.CreateInstance(targetType);
 		foreach (PropertyInfo convertProp in toConvert.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
 		{
-			// * Get ToString format attribute
 			object[] formatAttribute = convertProp.GetCustomAttributes(typeof(UseFormat), true);
 			UseFormat useFormat = ((UseFormat)(formatAttribute.FirstOrDefault() ?? new UseFormat(string.Empty)));
 
-			// * Get IgnoreIf attribute values
 			object[] ignoreIfAttribute = convertProp.GetCustomAttributes(typeof(IgnoreIf), true);
 			IgnoreIf[] ignoreIfTypes = ignoreIfAttribute.OfType<IgnoreIf>().ToArray();
 
-			// * Get custom attribute name
 			object[] mappedToAttribute = convertProp.GetCustomAttributes(typeof(MappedTo), true);
 			MappedTo[] mappedToNames = mappedToAttribute.OfType<MappedTo>().ToArray();
 
-			// * Iterate through MappedTo[]
 			foreach (MappedTo mappedName in mappedToNames.Distinct().ToList())
 			{
-				// * Check if the property is ignored via IgnoreIf attribute
 				if (ignoreIfTypes.ToList().Any(ignore => ignore.TargetType == output.GetType()))
 					continue;
 
-				// * Loop only through all properties that matched the target mapped name
 				foreach (PropertyInfo outputProp in output.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(prop => prop.Name.Equals(mappedName.Name)).ToList())
 				{
-					// * Validation for type mismatch except for collections
 					if (!outputProp.PropertyType.IsAssignableFrom(convertProp.PropertyType)
 						&& !IsGuidMapping(convertProp.PropertyType, outputProp.PropertyType)
 						&& !IsCustomType(outputProp.PropertyType)
@@ -50,23 +43,19 @@ internal class ModelMapperCore
 						&& !typeof(IEnumerable).IsAssignableFrom(outputProp.PropertyType))
 						throw new IMapperException($"The source type ({convertProp.PropertyType.Name}) could not be converted to the target type ({outputProp.PropertyType.Name}).");
 
-					// * Check if Guid to String mapping or vice versa
 					if (IsGuidMapping(convertProp.PropertyType, outputProp.PropertyType))
 					{
-						// * Check source if Guid then convert to string
 						if (convertProp.PropertyType == typeof(Guid) && outputProp.PropertyType == typeof(string))
 						{
 							Guid sourceValue = (Guid)convertProp.GetValue(toConvert);
 							outputProp.SetValue(output, sourceValue == Guid.Empty ? string.Empty : sourceValue.ToString());
 						}
-						// * Check source if string then  convert to Guid
 						else if (convertProp.PropertyType == typeof(string) && outputProp.PropertyType == typeof(Guid))
 						{
 							string sourceValue = convertProp.GetValue(toConvert)?.ToString() ?? string.Empty;
 							Guid.TryParse(sourceValue, out Guid guidValue);
 							outputProp.SetValue(output, guidValue);
 						}
-						// * Expected to be GUID to GUID
 						else
 						{
 							Guid sourceValue = (Guid)convertProp.GetValue(toConvert);
@@ -74,17 +63,62 @@ internal class ModelMapperCore
 						}
 					}
 
-					// * Check if Enum
-					else if (outputProp.PropertyType.IsEnum)
-						outputProp.SetValue(output, Enum.ToObject(outputProp.PropertyType, convertProp.GetValue(toConvert)));
+					else if (outputProp.PropertyType.IsEnum || (Nullable.GetUnderlyingType(outputProp.PropertyType)?.IsEnum == true))
+					{
+						Type? targetEnumType = outputProp.PropertyType.IsEnum 
+							? outputProp.PropertyType 
+							: Nullable.GetUnderlyingType(outputProp.PropertyType);
+						
+						if (targetEnumType is null)
+							continue;
+						
+						bool isNullable = !outputProp.PropertyType.IsEnum;
+						
+						object? sourceValue = convertProp.GetValue(toConvert);
+						
+						if (sourceValue is null)
+						{
+							if (isNullable)
+								outputProp.SetValue(output, null);
+							continue;
+						}
+						
+						object? enumValue = null;
+						bool hasValidValue = false;
+						
+						if (sourceValue is string stringValue)
+						{
+							if (Enum.TryParse(targetEnumType, stringValue, ignoreCase: true, out object? parsedValue))
+							{
+								enumValue = parsedValue;
+								hasValidValue = true;
+							}
+						}
+						else
+						{
+							try
+							{
+								Type underlyingType = Enum.GetUnderlyingType(targetEnumType);
+								object convertedValue = Convert.ChangeType(sourceValue, underlyingType);
+								enumValue = Enum.ToObject(targetEnumType, convertedValue);
+								hasValidValue = true;
+							}
+							catch
+							{
+							}
+						}
+						
+						if (hasValidValue && enumValue is not null)
+						{
+							outputProp.SetValue(output, enumValue);
+						}
+					}
 
-					// * Check if IEnumerable (eg IList, List and Arrays)
 					else if (outputProp.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(outputProp.PropertyType))
 					{
 						IEnumerable collection = (IEnumerable)convertProp.GetValue(toConvert, null);
 						if (!(collection is null))
 						{
-							// * Safely resolve the element type
 							Type? elementType;
 							if (outputProp.PropertyType.IsArray)
 								elementType = outputProp.PropertyType.GetElementType();
@@ -96,29 +130,23 @@ internal class ModelMapperCore
 							if (elementType is null)
 								throw new IMapperException($"POCO.Mapper could not determine element type for {outputProp.PropertyType.Name}");
 
-							// * Define and check the target output list
 							Type constructedListType = typeof(List<>).MakeGenericType(elementType);
 							if (constructedListType is null)
 								throw new IMapperException("POCO.Mapper encountered an error with " + outputProp.PropertyType.Name);
 							IList finalList = (IList)Activator.CreateInstance(constructedListType);
 							bool isInnerElementCustom = IsCustomType(elementType);
 
-							// * Loop through the objects to be mapped
 							foreach (object obj in collection)
 							{
-								// * For custom types
 								if (isInnerElementCustom)
 								{
-									// * Call method again to map list objects
 									object? result = Map(obj, elementType);
 									finalList.Add(result);
 								}
-								// * For native types
 								else
 									finalList.Add(obj);
 							}
 
-							// * Assign to target property
 							if (outputProp.PropertyType.IsArray)
 							{
 								Array arrayList = Array.CreateInstance(elementType, finalList.Count);
@@ -148,15 +176,9 @@ internal class ModelMapperCore
 						}
 					}
 
-					// * Check if a custom type
-					else if (IsCustomType(outputProp.PropertyType))
+					else if (IsCustomType(outputProp.PropertyType) || IsCustomValueType(outputProp.PropertyType))
 						outputProp.SetValue(output, Map(convertProp.GetValue(toConvert), outputProp.PropertyType));
 
-					// * Check if a custom value type
-					else if (IsCustomValueType(outputProp.PropertyType))
-						outputProp.SetValue(output, Map(convertProp.GetValue(toConvert), outputProp.PropertyType));
-
-					// * Default
 					else
 					{
 						if (convertProp.PropertyType != typeof(string) && outputProp.PropertyType == typeof(string))
@@ -187,9 +209,6 @@ internal class ModelMapperCore
 
 		bool IsCustomType(Type outputType) => !outputType.IsPrimitive && outputType.IsClass && !outputType.IsAbstract && outputType != typeof(string) && outputType != typeof(object);
 
-		/*
-		 * Custom structs / custom value types has no CustomAttributes
-		 */
 		bool IsCustomValueType(Type outputType)
 		{
 			if (!outputType.IsValueType || outputType.IsPrimitive || outputType.Namespace == null)
@@ -197,11 +216,9 @@ internal class ModelMapperCore
 
 			string asmName = outputType.Assembly.GetName().Name ?? string.Empty;
 
-			// Treat types from assemblies that start with "System" or "Microsoft" as framework types.
 			if (asmName.StartsWith("System", StringComparison.Ordinal) || asmName.StartsWith("Microsoft", StringComparison.Ordinal))
 				return false;
 
-			// Also exclude the core runtime assembly (where object, Int32, etc. live).
 			if (outputType.Assembly == typeof(object).Assembly)
 				return false;
 
