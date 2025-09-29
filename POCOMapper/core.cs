@@ -9,24 +9,28 @@ namespace POCO.Mapper.Common;
 
 internal class ModelMapperCore
 {
-	public object Map(object toConvert, Type targetType)
+	public object? Map(object? toConvert, Type? targetType)
 	{
 		if (toConvert is null)
 			return null;
+
+		if (targetType is null)
+			return null;
+		
 		object output = Activator.CreateInstance(targetType);
 		foreach (PropertyInfo convertProp in toConvert.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
 		{
 			// * Get ToString format attribute
 			object[] formatAttribute = convertProp.GetCustomAttributes(typeof(UseFormat), true);
-			UseFormat useFormat = ((UseFormat)(formatAttribute?.FirstOrDefault() ?? new UseFormat(string.Empty)));
+			UseFormat useFormat = ((UseFormat)(formatAttribute.FirstOrDefault() ?? new UseFormat(string.Empty)));
 
 			// * Get IgnoreIf attribute values
 			object[] ignoreIfAttribute = convertProp.GetCustomAttributes(typeof(IgnoreIf), true);
-			IgnoreIf[] ignoreIfTypes = ((IgnoreIf[])(ignoreIfAttribute ?? new IgnoreIf[] { }));
+			IgnoreIf[] ignoreIfTypes = (IgnoreIf[])ignoreIfAttribute;
 
 			// * Get custom attribute name
 			object[] mappedToAttribute = convertProp.GetCustomAttributes(typeof(MappedTo), true);
-			MappedTo[] mappedToNames = ((MappedTo[])(mappedToAttribute ?? new MappedTo[] { }));
+			MappedTo[] mappedToNames = (MappedTo[])mappedToAttribute;
 
 			// * Iterate through MappedTo[]
 			foreach (MappedTo mappedName in mappedToNames.Distinct().ToList())
@@ -47,7 +51,7 @@ internal class ModelMapperCore
 						throw new IMapperException($"The source type ({convertProp.PropertyType.Name}) could not be converted to the target type ({outputProp.PropertyType.Name}).");
 
 					// * Check if Guid to String mapping or vice versa
-					else if (IsGuidMapping(convertProp.PropertyType, outputProp.PropertyType))
+					if (IsGuidMapping(convertProp.PropertyType, outputProp.PropertyType))
 					{
 						// * Check source if Guid then convert to string
 						if (convertProp.PropertyType == typeof(Guid) && outputProp.PropertyType == typeof(string))
@@ -87,7 +91,7 @@ internal class ModelMapperCore
 							if (constructedListType is null)
 								throw new IMapperException("POCO.Mapper encountered an error with " + outputProp.PropertyType.Name);
 							IList finalList = (IList)Activator.CreateInstance(constructedListType);
-							bool isInnerElementCustom = !outputProp.PropertyType.IsArray ? IsCustomType(outputProp.PropertyType.GetGenericArguments()[0]) : IsCustomType(outputProp.PropertyType.GetElementType());
+							bool isInnerElementCustom = !outputProp.PropertyType.IsArray ? IsCustomType(outputProp.PropertyType.GetGenericArguments()[0]) : IsCustomType(outputProp.PropertyType.GetElementType()!);
 
 							// * Loop through the objects to be mapped
 							foreach (object obj in collection)
@@ -96,7 +100,7 @@ internal class ModelMapperCore
 								if (isInnerElementCustom)
 								{
 									// * Call method again to map list objects
-									object result = Map(obj, !outputProp.PropertyType.IsArray ? outputProp.PropertyType.GetGenericArguments()[0] : outputProp.PropertyType.GetElementType());
+									object? result = Map(obj, !outputProp.PropertyType.IsArray ? outputProp.PropertyType.GetGenericArguments()[0] : outputProp.PropertyType.GetElementType());
 									finalList.Add(result);
 								}
 								// * For native types
@@ -107,9 +111,27 @@ internal class ModelMapperCore
 							// * Assign to target property
 							if (outputProp.PropertyType.IsArray)
 							{
-								Array arrayList = Array.CreateInstance(outputProp.PropertyType.GetElementType(), finalList.Count);
+								Type elementType = outputProp.PropertyType.GetElementType()!;
+								Array arrayList = Array.CreateInstance(elementType, finalList.Count);
 								for (int i = 0; i < finalList.Count; i++)
-									arrayList.SetValue(Convert.ChangeType(finalList[i], outputProp.PropertyType.GetElementType()), i);
+								{
+									object value = finalList[i];
+									if (value == null || elementType.IsInstanceOfType(value))
+									{
+										arrayList.SetValue(value, i);
+									}
+									else if (elementType.IsEnum)
+									{
+										if (value is string s)
+											arrayList.SetValue(Enum.Parse(elementType, s), i);
+										else
+											arrayList.SetValue(Enum.ToObject(elementType, value), i);
+									}
+									else
+									{
+										arrayList.SetValue(Convert.ChangeType(value, elementType), i);
+									}
+								}
 								outputProp.SetValue(output, arrayList);
 							}
 							else
