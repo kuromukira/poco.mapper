@@ -26,11 +26,11 @@ internal class ModelMapperCore
 
 			// * Get IgnoreIf attribute values
 			object[] ignoreIfAttribute = convertProp.GetCustomAttributes(typeof(IgnoreIf), true);
-			IgnoreIf[] ignoreIfTypes = (IgnoreIf[])ignoreIfAttribute;
+			IgnoreIf[] ignoreIfTypes = ignoreIfAttribute.OfType<IgnoreIf>().ToArray();
 
 			// * Get custom attribute name
 			object[] mappedToAttribute = convertProp.GetCustomAttributes(typeof(MappedTo), true);
-			MappedTo[] mappedToNames = (MappedTo[])mappedToAttribute;
+			MappedTo[] mappedToNames = mappedToAttribute.OfType<MappedTo>().ToArray();
 
 			// * Iterate through MappedTo[]
 			foreach (MappedTo mappedName in mappedToNames.Distinct().ToList())
@@ -84,14 +84,24 @@ internal class ModelMapperCore
 						IEnumerable collection = (IEnumerable)convertProp.GetValue(toConvert, null);
 						if (!(collection is null))
 						{
+							// * Safely resolve the element type
+							Type? elementType;
+							if (outputProp.PropertyType.IsArray)
+								elementType = outputProp.PropertyType.GetElementType();
+							else if (outputProp.PropertyType.IsGenericType)
+								elementType = outputProp.PropertyType.GetGenericArguments().FirstOrDefault();
+							else
+								elementType = typeof(object);
+
+							if (elementType is null)
+								throw new IMapperException($"POCO.Mapper could not determine element type for {outputProp.PropertyType.Name}");
+
 							// * Define and check the target output list
-							Type constructedListType = typeof(List<>).MakeGenericType(
-								!outputProp.PropertyType.IsArray ? outputProp.PropertyType.GetGenericArguments()[0] : outputProp.PropertyType.GetElementType()
-							);
+							Type constructedListType = typeof(List<>).MakeGenericType(elementType);
 							if (constructedListType is null)
 								throw new IMapperException("POCO.Mapper encountered an error with " + outputProp.PropertyType.Name);
 							IList finalList = (IList)Activator.CreateInstance(constructedListType);
-							bool isInnerElementCustom = !outputProp.PropertyType.IsArray ? IsCustomType(outputProp.PropertyType.GetGenericArguments()[0]) : IsCustomType(outputProp.PropertyType.GetElementType()!);
+							bool isInnerElementCustom = IsCustomType(elementType);
 
 							// * Loop through the objects to be mapped
 							foreach (object obj in collection)
@@ -100,7 +110,7 @@ internal class ModelMapperCore
 								if (isInnerElementCustom)
 								{
 									// * Call method again to map list objects
-									object? result = Map(obj, !outputProp.PropertyType.IsArray ? outputProp.PropertyType.GetGenericArguments()[0] : outputProp.PropertyType.GetElementType());
+									object? result = Map(obj, elementType);
 									finalList.Add(result);
 								}
 								// * For native types
@@ -111,7 +121,6 @@ internal class ModelMapperCore
 							// * Assign to target property
 							if (outputProp.PropertyType.IsArray)
 							{
-								Type elementType = outputProp.PropertyType.GetElementType()!;
 								Array arrayList = Array.CreateInstance(elementType, finalList.Count);
 								for (int i = 0; i < finalList.Count; i++)
 								{
