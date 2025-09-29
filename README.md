@@ -137,21 +137,3 @@ void Map()
 The result would be an instance of ```EmployeeViewModel``` with values for ```Id```, ```EmployeeName```, ```BDay``` from ```Employee``` entity. ```FirstName``` and ```LastName``` properties of ```Employee``` entity will be ignored by **POCOMapper** and will not be mapped to ```EmployeeViewModel```. Values for ```Work``` property of ```Employee``` will also be mapped to ```WorkViewModel```.
 
 ***Note***: *As of the current version, ```POCO.Mapper``` also supports mapping of values for ```IList<>```, ```List<>``` and ```Array[]``` properties (_interchangeably_).*
-
-# Contributors
-- [kuromukira](https://www.twitter.com/norgelera)
-
-Install the following to get started
-
-**IDE**
-1. [Visual Studio Code](https://code.visualstudio.com/) 
-2. [Visual Studio Community](https://visualstudio.microsoft.com/downloads/)
-
-**Extensions**
-1. [C# Language Extension for VSCode](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
-
-**Frameworks**
-1. [.NET Core](https://www.microsoft.com/net/download)
-
-
-Do you want to contribute? Send me an email or DM me in [twitter](https://www.twitter.com/norgelera).
